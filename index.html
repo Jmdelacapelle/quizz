@@ -2,308 +2,856 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz — Capitale de la France</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Audit Vehicule</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0EEE9;--surf:#fff;--surf2:#F7F6F2;--surf3:#ECEAE4;
+  --brd:#C0BDB3;--txt:#1E1D1A;--txt2:#5A5852;--txt3:#9A9690;
+  --ok:#2D6A0F;--okbg:#DFF2D0;--okm:#6DBF3E;--okb:#4F9E2A;
+  --mo:#7A4800;--mobg:#FDEBD0;--mom:#F0A030;--mob:#D4841A;
+  --af:#0D4F8C;--afbg:#D6EAF8;--afm:#2E8FD4;--afb:#1A72B0;
+  --cr:#8B1A1A;--crbg:#FADBD8;--crm:#DC3535;--crb:#B52A2A;
+  --acc:#1A56A0;
+  --r:14px;--rs:8px;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-font-smoothing:antialiased;min-height:100%}
+.app{max-width:500px;margin:0 auto;background:var(--bg);min-height:100vh}
 
-  :root {
-    --bg: #F5F2EB;
-    --card: #FFFFFF;
-    --text: #1A1A1A;
-    --muted: #888;
-    --accent: #2D5BE3;
-    --accent-light: #EBF0FD;
-    --success: #1A7A4A;
-    --success-bg: #E8F7EF;
-    --danger: #C0392B;
-    --danger-bg: #FDEDEB;
-    --border: #E0DDD5;
-    --radius: 14px;
-  }
+/* SCREENS */
+.scr{display:none;min-height:100vh;padding-bottom:80px}
+.scr.on{display:block}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-  }
+/* HEADER */
+.hdr{background:var(--acc);padding:13px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.hico{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;flex-shrink:0}
+.htit{font-size:16px;font-weight:700;color:#fff;flex:1}
+.hsub{font-size:11px;color:rgba(255,255,255,.65)}
+.hstep{font-size:12px;color:rgba(255,255,255,.85);background:rgba(255,255,255,.18);padding:4px 10px;border-radius:20px;font-weight:600;white-space:nowrap}
+.bbtn{background:rgba(255,255,255,.18);border:none;cursor:pointer;color:#fff;font-size:18px;padding:7px 9px;border-radius:9px;display:flex;align-items:center;flex-shrink:0}
 
-  .card {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  }
+/* PROGRESS */
+.pgwrap{height:5px;background:rgba(0,0,0,.08)}
+.pgfill{height:5px;background:linear-gradient(90deg,#4FC3F7,#29B6F6);transition:width .4s}
 
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-light);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 5px 12px;
-    border-radius: 100px;
-    margin-bottom: 1.25rem;
-  }
+/* NAV BAR - fixed bottom */
+.navbar{position:fixed;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;background:var(--surf);border-top:2px solid var(--brd);padding:11px 14px;display:none;gap:8px;z-index:50;box-shadow:0 -2px 14px rgba(0,0,0,.1)}
+.navbar.on{display:flex}
+.btnp{flex:1;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px}
+.btnp:active{opacity:.85}
+.btns{padding:13px 14px;background:var(--surf2);color:var(--txt2);border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px}
 
-  .progress {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: right;
-    margin-bottom: 0.75rem;
-    font-family: 'Syne', sans-serif;
-  }
+/* SECTIONS */
+.sec{padding:16px 14px 0}
+.sectit{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--txt3);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 
-  .label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
+/* CARDS */
+.card{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
 
-  input[type="text"], input[type="date"] {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: #FAFAFA;
-    margin-bottom: 1.25rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  input:focus { border-color: var(--accent); background: #fff; }
-  input:disabled { opacity: 0.5; }
+/* FIELDS */
+.fld{margin-bottom:15px}
+.fld:last-child{margin-bottom:0}
+.fld label{font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:6px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.fld label i{font-size:13px;color:var(--acc)}
+.fld input,.fld select,.fld textarea{width:100%;padding:11px 14px;border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;background:var(--surf2);color:var(--txt);font-family:var(--font);-webkit-appearance:none;appearance:none;outline:none}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--acc);background:#fff}
+.fld textarea{resize:none;min-height:110px;line-height:1.6}
+.fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A5852' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-color:var(--surf2);padding-right:38px}
 
-  .question {
-    font-family: 'Syne', sans-serif;
-    font-size: 19px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.4;
-    margin-bottom: 1.25rem;
-  }
+/* PLAQUE */
+.plqprev{margin-top:10px;display:flex;align-items:center;gap:12px}
+.plqbox{background:#1A3A6B;color:#fff;font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.2em;padding:9px 18px;border-radius:7px;min-width:140px;min-height:42px;display:flex;align-items:center;justify-content:center;border:2px solid #0D2847}
+.plqhint{font-size:11px;color:var(--txt3)}
 
-  .answers {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+/* WELCOME CARD */
+.welc{background:linear-gradient(135deg,#1A56A0,#0D3575);border-radius:var(--r);padding:20px;margin:14px 14px 0;border:2px solid #0D2847}
+.welctit{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.welcsub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:14px}
+.welcchips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;display:flex;align-items:center;gap:5px;border:1.5px solid rgba(255,255,255,.2)}
 
-  .answer-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #FAFAFA;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    text-align: left;
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .answer-btn:hover:not(:disabled) {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
-  .answer-btn:disabled { cursor: default; }
+/* CAT NAV */
+.catnav{display:flex;overflow-x:auto;gap:7px;padding:14px 14px 0;scrollbar-width:none}
+.catnav::-webkit-scrollbar{display:none}
+.catbtn{white-space:nowrap;padding:8px 13px;border-radius:22px;font-size:12px;font-weight:600;border:2px solid var(--brd);background:var(--surf);color:var(--txt2);cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;font-family:var(--font)}
+.catbtn i{font-size:13px}
+.catbtn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.catbtn.warn{border-color:var(--crb);color:var(--cr);background:var(--crbg)}
+.catbtn.good{border-color:var(--okb);color:var(--ok);background:var(--okbg)}
+.cbadge{background:rgba(255,255,255,.25);border-radius:10px;padding:1px 7px;font-size:10px}
+.warn .cbadge{background:var(--crb);color:#fff}
+.good .cbadge{background:var(--okb);color:#fff}
 
-  .letter {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: 'Syne', sans-serif;
-    flex-shrink: 0;
-  }
+/* CAT SECTION */
+.catsec{display:none;padding:12px 14px}
+.catsec.on{display:block}
+.catshdr{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.catshico{width:38px;height:38px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;flex-shrink:0}
+.catsname{font-size:15px;font-weight:700}
+.catscnt{font-size:12px;color:var(--txt3)}
 
-  .answer-btn.correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
-  .answer-btn.correct .letter { background: var(--success-bg); border-color: var(--success); color: var(--success); }
-  .answer-btn.wrong { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
-  .answer-btn.wrong .letter { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+/* CONTROL ITEM */
+.citm{background:var(--surf);border:2.5px solid var(--brd);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.citm.rok{border-color:var(--okb)}
+.citm.rmo{border-color:var(--mob)}
+.citm.raf{border-color:var(--afb)}
+.citm.rcr{border-color:var(--crb)}
+.citop{padding:12px 14px 0;display:flex;align-items:center;gap:8px}
+.cilbl{font-size:14px;font-weight:600;color:var(--txt);flex:1}
+.cipill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:12px;border:1.5px solid;display:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 
-  .result {
-    display: none;
-    margin-top: 1.25rem;
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-  }
-  .result.success { background: var(--success-bg); color: var(--success); }
-  .result.fail { background: var(--danger-bg); color: var(--danger); }
+/* GAUGE */
+.gauwrap{padding:10px 14px 0}
+.gaulbls{display:flex;justify-content:space-between;margin-bottom:5px}
+.gaul{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.gaul.ok{color:var(--ok)}.gaul.mo{color:var(--mo)}.gaul.af{color:var(--af)}.gaul.cr{color:var(--cr)}
+.gautrack{height:10px;border-radius:7px;background:var(--surf3);border:2px solid var(--brd);display:flex;overflow:hidden;cursor:pointer}
+.gauseg{flex:1;transition:background .15s}
+.gauseg+.gauseg{border-left:2px solid var(--surf)}
+.gauseg.aok{background:var(--okm)}.gauseg.amo{background:var(--mom)}.gauseg.aaf{background:var(--afm)}.gauseg.acr{background:var(--crm)}
 
-  .error-msg {
-    display: none;
-    font-size: 13px;
-    color: var(--danger);
-    margin-top: -12px;
-    margin-bottom: 12px;
-  }
+/* RATING BUTTONS */
+.ratrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 14px 0}
+.rbtn{padding:9px 2px;border-radius:var(--rs);font-size:11px;font-weight:700;border:2px solid;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:3px;flex-direction:column;line-height:1.1}
+.rbtn i{font-size:15px}
+.rbtn:active{transform:scale(.93)}
+.rbtn.ok{color:var(--ok);border-color:var(--okb);background:var(--okbg)}
+.rbtn.mo{color:var(--mo);border-color:var(--mob);background:var(--mobg)}
+.rbtn.af{color:var(--af);border-color:var(--afb);background:var(--afbg)}
+.rbtn.cr{color:var(--cr);border-color:var(--crb);background:var(--crbg)}
+.rbtn.sel.ok{background:var(--okm);color:#fff;border-color:var(--ok)}
+.rbtn.sel.mo{background:var(--mom);color:#fff;border-color:var(--mo)}
+.rbtn.sel.af{background:var(--afm);color:#fff;border-color:var(--af)}
+.rbtn.sel.cr{background:var(--crm);color:#fff;border-color:var(--cr)}
 
-  .sync-status {
-    display: none;
-    margin-top: 8px;
-    font-size: 13px;
-    text-align: center;
-    color: var(--muted);
-  }
+/* ACTIONS */
+.acts{display:flex;gap:8px;padding:10px 14px 14px}
+.abtn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:22px;font-size:12px;font-weight:600;border:2px solid var(--brd);background:var(--surf2);color:var(--txt2);cursor:pointer;font-family:var(--font)}
+.abtn i{font-size:15px}
+.abtn.on{border-color:var(--acc);color:var(--acc);background:var(--afbg)}
+.notefld{display:none;padding:0 14px 10px}
+.notefld.on{display:block}
+.notefld input{width:100%;padding:9px 12px;border:2px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--surf2);color:var(--txt);font-family:var(--font);outline:none}
+.notefld input:focus{border-color:var(--acc);background:#fff}
+.photofld{display:none;padding:0 14px 12px}
+.photofld.on{display:block}
+.photolbl{display:flex;align-items:center;justify-content:center;gap:9px;border:2px dashed var(--brd);border-radius:var(--rs);padding:14px;cursor:pointer;background:var(--surf2);font-size:13px;font-weight:600;color:var(--txt2)}
+.photolbl i{font-size:22px}
+.photoinp{display:none}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.twrap{position:relative}
+.thumb{width:70px;height:70px;border-radius:var(--rs);object-fit:cover;border:2px solid var(--brd)}
+.tdel{position:absolute;top:-7px;right:-7px;width:22px;height:22px;background:var(--cr);color:#fff;border:none;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-  .restart-btn {
-    display: none;
-    width: 100%;
-    margin-top: 10px;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 13px;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .restart-btn:hover { background: #EAE7DF; }
+/* SUMMARY */
+.vhero{background:linear-gradient(135deg,#1A56A0,#0D3575);border-radius:var(--r);padding:18px;margin-bottom:14px;border:2px solid #0D2847}
+.vhtop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.vhico{width:50px;height:50px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:27px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.2)}
+.vhname{font-size:20px;font-weight:800;color:#fff;line-height:1.2}
+.vhsub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
+.vhplq{font-family:var(--mono);font-size:17px;font-weight:700;background:#0D2847;color:#fff;padding:8px 16px;border-radius:7px;letter-spacing:.15em;border:2px solid rgba(255,255,255,.2);display:inline-block}
+.vhdetrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.vhinfos{display:flex;flex-direction:column;gap:5px}
+.vhinfo{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
+.vhinfo i{font-size:13px}
+.commentblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.commenthdr{padding:10px 14px;background:var(--surf2);border-bottom:2px solid var(--brd);font-size:11px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.08em}
+.commenthdr i{font-size:15px;color:var(--acc)}
+.commenttxt{padding:12px 14px;font-size:14px;color:var(--txt);line-height:1.6;white-space:pre-wrap}
+.commentblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.commenthdr{padding:10px 14px;background:var(--surf2);border-bottom:2px solid var(--brd);font-size:12px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.06em}
+.commenthdr i{font-size:15px;color:var(--acc)}
+.commenttxt{padding:12px 14px;font-size:14px;color:var(--txt);line-height:1.6;white-space:pre-wrap}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1.5px solid var(--surf3);font-size:13px}
+.drow:last-child{border-bottom:none}
+.dlbl{color:var(--txt2);display:flex;align-items:center;gap:6px}
+.dlbl i{font-size:14px;color:var(--acc)}
+.dval{font-weight:700}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{padding:16px;border-radius:var(--r);text-align:center;border:2px solid}
+.stat .sn{font-size:30px;font-weight:800;line-height:1}
+.stat .sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.stat .si{font-size:22px;margin-bottom:4px}
+.stat.ok{background:var(--okbg);color:var(--ok);border-color:var(--okb)}
+.stat.mo{background:var(--mobg);color:var(--mo);border-color:var(--mob)}
+.stat.af{background:var(--afbg);color:var(--af);border-color:var(--afb)}
+.stat.cr{background:var(--crbg);color:var(--cr);border-color:var(--crb)}
+.iblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.ibhdr{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid rgba(0,0,0,.06)}
+.ibhdr i{font-size:18px}
+.ibhtit{font-size:14px;font-weight:700}
+.irow{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1.5px solid var(--surf3);gap:8px}
+.irow:last-child{border-bottom:none}
+.iname{font-size:13px;font-weight:600}
+.icat{font-size:11px;color:var(--txt3);margin-top:1px}
+.inote{font-size:11px;color:var(--txt3);font-style:italic;margin-top:2px}
+.ibadge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;border:1.5px solid;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.ibadge.cr{color:var(--cr);background:var(--crbg);border-color:var(--crb)}
+.ibadge.af{color:var(--af);background:var(--afbg);border-color:var(--afb)}
+.ibadge.mo{color:var(--mo);background:var(--mobg);border-color:var(--mob)}
+
+/* EXPORT */
+.expcard{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.expcard label{font-size:11px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:6px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.expurl{width:100%;padding:10px 13px;border:2px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--surf2);color:var(--txt);font-family:var(--mono);margin-bottom:10px;outline:none}
+.expurl:focus{border-color:var(--acc)}
+.btnexp{width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.expst{font-size:13px;color:var(--txt2);padding:5px 0;min-height:32px;display:flex;align-items:center;gap:6px;font-weight:500}
+.expst.ok{color:var(--ok)}.expst.err{color:var(--cr)}
+details{background:var(--surf2);border:2px solid var(--brd);border-radius:var(--rs);padding:10px 14px;margin-top:10px}
+summary{font-size:12px;color:var(--txt2);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-weight:600}
+summary::-webkit-details-marker{display:none}
+.scriptbox{background:#1A1B2E;color:#A9B7FF;font-family:var(--mono);font-size:11px;padding:14px;border-radius:var(--rs);margin-top:10px;overflow-x:auto;line-height:1.8;white-space:pre;border:2px solid #0D0E1A}
+.btnreset{padding:13px 16px;background:transparent;color:var(--cr);border:2px solid var(--crb);border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-top:8px}
+.btnreset:hover{background:var(--crbg)}
+.chint{font-size:12px;color:var(--txt3);margin-bottom:12px;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+.chint i{font-size:15px;color:var(--acc);margin-top:1px;flex-shrink:0}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:#1E1D1A;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="card">
-  <span class="badge">🌍 Géographie</span>
-  <p class="progress">Question 1 / 1</p>
-
-  <p class="label">Ton prénom</p>
-  <input type="text" id="prenom-input" placeholder="Ex : Marie" autocomplete="off" />
-
-  <p class="label">Ta date de naissance</p>
-  <input type="date" id="ddn-input" />
-
-  <p class="question">Quelle est la capitale de la France ?</p>
-
-  <div class="answers" id="answers">
-    <button class="answer-btn" onclick="answer(this, false, 'Lyon')">
-      <span class="letter">A</span> Lyon
-    </button>
-    <button class="answer-btn" onclick="answer(this, true, 'Paris')">
-      <span class="letter">B</span> Paris
-    </button>
-    <button class="answer-btn" onclick="answer(this, false, 'Marseille')">
-      <span class="letter">C</span> Marseille
-    </button>
+<!-- ECRAN 1 -->
+<div class="scr on" id="scr1">
+  <div class="pgwrap"><div class="pgfill" style="width:25%"></div></div>
+  <div class="hdr">
+    <div class="hico"><i class="ti ti-car" aria-hidden="true"></i></div>
+    <div style="flex:1"><div class="htit">Audit Vehicule</div><div class="hsub">Controle mensuel</div></div>
+    <span class="hstep">1 / 4</span>
   </div>
-
-  <div class="result" id="result"></div>
-  <div class="error-msg" id="error-msg"></div>
-  <div class="sync-status" id="sync-status"></div>
-
-  <button class="restart-btn" id="restart" onclick="restart()">↺ Recommencer</button>
+  <div class="welc">
+    <div class="welctit">Nouveau controle</div>
+    <div class="welcsub">Renseignez les informations du vehicule</div>
+    <div class="welcchips">
+      <div class="chip"><i class="ti ti-list-check"></i>26 points</div>
+      <div class="chip"><i class="ti ti-table-export"></i>Export Sheets</div>
+      <div class="chip"><i class="ti ti-camera"></i>Photos</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-user"></i>Controleur</div>
+    <div class="card">
+      <div class="fld"><label><i class="ti ti-id-badge"></i>Prenom</label><input type="text" id="inp_prenom" placeholder="ex. Jean-Pierre"></div>
+      <div class="fld"><label><i class="ti ti-calendar"></i>Date du controle</label><input type="date" id="inp_date"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-car"></i>Vehicule</div>
+    <div class="card">
+      <div class="fld"><label><i class="ti ti-building-factory"></i>Marque</label>
+        <select id="inp_marque">
+          <option value="">-- Selectionnez --</option>
+          <option>Peugeot</option><option>Renault</option><option>Mercedes</option><option>Hyundai</option><option>Autre</option>
+        </select>
+      </div>
+      <div class="fld"><label><i class="ti ti-tag"></i>Modele</label><input type="text" id="inp_modele" placeholder="ex. 308 SW, Clio V, Vito..."></div>
+      <div class="fld">
+        <label><i class="ti ti-license"></i>Plaque d'immatriculation</label>
+        <input type="text" id="inp_plaque" placeholder="AB 123 CD" maxlength="10" autocomplete="off" spellcheck="false" autocapitalize="characters" style="letter-spacing:.08em;font-family:var(--mono);font-size:16px;font-weight:600">
+        <div class="plqprev">
+          <div class="plqbox" id="plq_display">-- -- --</div>
+          <span class="plqhint">Apercu formate</span>
+        </div>
+      </div>
+      <div class="fld"><label><i class="ti ti-road"></i>Kilometrage (km)</label><input type="number" id="inp_km" placeholder="ex. 45000" min="0"></div>
+    </div>
+  </div>
+  <div class="navbar on" id="nav1">
+    <button class="btnp" id="btn_goto2"><i class="ti ti-chevron-right"></i>Commencer les controles</button>
+  </div>
 </div>
 
+<!-- ECRAN 2 -->
+<div class="scr" id="scr2">
+  <div class="pgwrap"><div class="pgfill" style="width:58%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back1"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Controles visuels</div><div class="hsub" id="prog_lbl">0 / 26 evalues</div></div>
+    <span class="hstep">2 / 4</span>
+  </div>
+  <div class="catnav" id="catnav"></div>
+  <div id="ctrl_cont"></div>
+  <div class="navbar" id="nav2">
+    <button class="btns" id="btn_back1b"><i class="ti ti-arrow-left"></i></button>
+    <button class="btnp" id="btn_goto3"><i class="ti ti-message"></i>Commentaire<i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<!-- ECRAN 3 -->
+<div class="scr" id="scr3">
+  <div class="pgwrap"><div class="pgfill" style="width:82%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back2"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Commentaire global</div><div class="hsub">Observations generales</div></div>
+    <span class="hstep">3 / 4</span>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-notes"></i>Observations</div>
+    <div class="card">
+      <p class="chint"><i class="ti ti-info-circle"></i>Contexte, points a surveiller, echeances, remarques supplementaires...</p>
+      <div class="fld"><label><i class="ti ti-pencil"></i>Commentaire libre</label>
+        <textarea id="inp_comment" placeholder="Ex : Vehicule principalement en ville. Changement pneus prevu..."></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="navbar" id="nav3">
+    <button class="btns" id="btn_back2b"><i class="ti ti-arrow-left"></i></button>
+    <button class="btnp" id="btn_goto4"><i class="ti ti-clipboard-list"></i>Recapitulatif<i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<!-- ECRAN 4 -->
+<div class="scr" id="scr4">
+  <div class="pgwrap"><div class="pgfill" style="width:100%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back3"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Recapitulatif</div><div class="hsub">Synthese de l'audit</div></div>
+    <span class="hstep">4 / 4</span>
+  </div>
+  <div class="sec"><div class="sectit"><i class="ti ti-car"></i>Vehicule</div><div id="sum_veh"></div></div>
+  <div class="sec"><div class="sectit"><i class="ti ti-chart-bar"></i>Resultats</div><div class="statgrid" id="sum_stats"></div></div>
+  <div class="sec"><div id="sum_issues"></div></div>
+  <div class="sec" style="padding-bottom:100px">
+    <div class="sectit"><i class="ti ti-upload"></i>Export Google Sheets</div>
+    <div class="expcard">
+      <label><i class="ti ti-brand-google"></i>URL Google Apps Script</label>
+      <input class="expurl" type="url" id="inp_sheeturl" value="https://script.google.com/macros/s/AKfycbz3bLifV9jJmPNjATlnk7LJi8oYD4oiDRMzxPAzilV39TRVbiT9QF5G_q_dDVNNIBDC/exec">
+      <button class="btnexp" id="btn_export"><i class="ti ti-table-export"></i>Envoyer vers Google Sheets</button>
+      <div class="expst" id="exp_status"></div>
+      <details>
+        <summary><i class="ti ti-code"></i>Script Apps Script a installer</summary>
+        <p style="font-size:12px;color:var(--txt2);margin:8px 0 4px;line-height:1.6">Extensions > Apps Script, coller puis Deployer > Nouvelle app Web (acces : Tout le monde) :</p>
+        <div class="scriptbox" id="scriptbox"></div>
+      </details>
+    </div>
+    <button class="btnreset" id="btn_reset"><i class="ti ti-refresh"></i>Nouvel audit</button>
+  </div>
+</div>
+
+<!-- ECRAN CONFIRMATION -->
+<div class="scr" id="scr_confirm">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;background:var(--bg)">
+    <div style="width:90px;height:90px;background:var(--okbg);border:3px solid var(--okb);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+      <i class="ti ti-circle-check" style="font-size:48px;color:var(--ok)"></i>
+    </div>
+    <div style="font-size:24px;font-weight:800;color:var(--ok);margin-bottom:10px">Audit envoye !</div>
+    <div style="font-size:15px;color:var(--txt2);margin-bottom:6px;line-height:1.5">Les donnees ont bien ete<br>enregistrees dans Google Sheets.</div>
+    <div style="font-size:13px;color:var(--txt3);margin-top:20px">Retour automatique dans quelques secondes...</div>
+    <div style="margin-top:30px;width:200px;height:5px;background:var(--surf3);border-radius:5px;overflow:hidden">
+      <div id="confirm_bar" style="height:5px;background:var(--ok);border-radius:5px;width:0%;transition:width 4s linear"></div>
+    </div>
+    <button onclick="doReset()" style="margin-top:30px;padding:13px 28px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px">
+      <i class="ti ti-plus" aria-hidden="true"></i>Nouvel audit maintenant
+    </button>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast_el"></div>
+
 <script>
-  const WEBHOOK = "https://script.google.com/macros/s/AKfycbzpuCOS0bjVR8yFSG08Ps-KE1ysjeqKpss1GLa6QeaD_iAu0oAI_S7VytA_Lw4lcpMTqg/exec";
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var CATS = [
+  {id:'freins',  label:'Freins',      icon:'ti-settings',    items:['Plaquettes avant','Plaquettes arriere','Disques avant','Disques arriere','Liquide de frein']},
+  {id:'niveaux', label:'Niveaux',     icon:'ti-droplet',     items:['Liquide refroidissement','Liquide lave-glace','Niveau huile','Aspect huile moteur']},
+  {id:'pneus',   label:'Pneus',       icon:'ti-circle-dashed',items:['Usure pneus avant','Usure pneus arriere','Pression des pneus']},
+  {id:'eclaire', label:'Eclairage',   icon:'ti-bulb',        items:['Feux de croisement','Feux de route','Feux stop','Clignotants','Eclairage plaque','Feux de recul','Warning']},
+  {id:'carros',  label:'Carrosserie', icon:'ti-car',         items:['Etat pare-brise','Essuie-glace avant','Essuie-glace arriere','Etat carrosserie']},
+  {id:'secu',    label:'Securite',    icon:'ti-shield-check',items:['Carte grise','Triangle signalisation','Gilet fluorescent']}
+];
 
-  async function answer(btn, isCorrect, choix) {
-    const prenom = document.getElementById('prenom-input').value.trim();
-    const ddn = document.getElementById('ddn-input').value;
-    const errorMsg = document.getElementById('error-msg');
+var RATS = [
+  {k:'ok', l:'OK',       cls:'ok', ic:'ti-circle-check',    gcls:'aok'},
+  {k:'mo', l:'Moyen',    cls:'mo', ic:'ti-alert-circle',    gcls:'amo'},
+  {k:'af', l:'A faire',  cls:'af', ic:'ti-tool',            gcls:'aaf'},
+  {k:'cr', l:'Critique', cls:'cr', ic:'ti-alert-triangle',  gcls:'acr'}
+];
 
-    if (!prenom && !ddn) {
-      errorMsg.textContent = '⚠️ Merci de saisir ton prénom et ta date de naissance.';
-      errorMsg.style.display = 'block';
-      document.getElementById('prenom-input').focus();
-      return;
-    }
-    if (!prenom) {
-      errorMsg.textContent = '⚠️ Merci de saisir ton prénom.';
-      errorMsg.style.display = 'block';
-      document.getElementById('prenom-input').focus();
-      return;
-    }
-    if (!ddn) {
-      errorMsg.textContent = '⚠️ Merci de saisir ta date de naissance.';
-      errorMsg.style.display = 'block';
-      document.getElementById('ddn-input').focus();
-      return;
-    }
-    errorMsg.style.display = 'none';
+var CATMAP = {};
+CATS.forEach(function(c){ c.items.forEach(function(it){ CATMAP[it] = c.label; }); });
 
-    document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
-    document.getElementById('prenom-input').disabled = true;
-    document.getElementById('ddn-input').disabled = true;
+var STATE = {};
+function initState(){
+  STATE = {};
+  CATS.forEach(function(c){
+    c.items.forEach(function(it){
+      STATE[it] = {rating:null, note:'', photos:[]};
+    });
+  });
+}
+initState();
 
-    const result = document.getElementById('result');
-    const sync = document.getElementById('sync-status');
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function showScr(n){
+  document.getElementById('scr1').className = 'scr' + (n===1?' on':'');
+  document.getElementById('scr2').className = 'scr' + (n===2?' on':'');
+  document.getElementById('scr3').className = 'scr' + (n===3?' on':'');
+  document.getElementById('scr4').className = 'scr' + (n===4?' on':'');
+  document.getElementById('nav1').className = 'navbar' + (n===1?' on':'');
+  document.getElementById('nav2').className = 'navbar' + (n===2?' on':'');
+  document.getElementById('nav3').className = 'navbar' + (n===3?' on':'');
+  window.scrollTo(0,0);
+  if(n===4) buildSummary();
+}
 
-    if (isCorrect) {
-      btn.classList.add('correct');
-      result.textContent = '✓ Bonne réponse ! Paris est bien la capitale de la France.';
-      result.className = 'result success';
-    } else {
-      btn.classList.add('wrong');
-      document.querySelectorAll('.answer-btn').forEach(b => {
-        if (b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+// ── PLAQUE ────────────────────────────────────────────────────────────────────
+var _plaqueLock = false;
+document.getElementById('inp_plaque').addEventListener('input', function(){
+  if(_plaqueLock) return;
+  _plaqueLock = true;
+  var raw = this.value.toUpperCase();
+  var clean = '';
+  for(var i=0; i<raw.length; i++){
+    var c = raw.charCodeAt(i);
+    if((c>=65&&c<=90)||(c>=48&&c<=57)) clean += raw[i];
+  }
+  var l1='', nums='', l2='', p=0;
+  while(p<clean.length && clean.charCodeAt(p)>=65 && clean.charCodeAt(p)<=90 && l1.length<2){ l1+=clean[p]; p++; }
+  while(p<clean.length && clean.charCodeAt(p)>=48 && clean.charCodeAt(p)<=57 && nums.length<3){ nums+=clean[p]; p++; }
+  while(p<clean.length && clean.charCodeAt(p)>=65 && clean.charCodeAt(p)<=90 && l2.length<2){ l2+=clean[p]; p++; }
+  var formatted = l1;
+  if(nums) formatted += ' ' + nums;
+  if(l2)   formatted += ' ' + l2;
+  this.value = formatted;
+  document.getElementById('plq_display').textContent = formatted || '-- -- --';
+  _plaqueLock = false;
+});
+
+function getPlaque(){
+  var t = document.getElementById('plq_display').textContent;
+  return (t === '-- -- --') ? '' : t;
+}
+
+// ── BUILD CONTROLS ────────────────────────────────────────────────────────────
+function buildControls(){
+  var nav  = document.getElementById('catnav');
+  var cont = document.getElementById('ctrl_cont');
+  nav.innerHTML  = '';
+  cont.innerHTML = '';
+
+  CATS.forEach(function(cat, ci){
+    // nav button
+    var btn = document.createElement('button');
+    btn.className = 'catbtn' + (ci===0 ? ' on' : '');
+    btn.setAttribute('data-cat', cat.id);
+    btn.innerHTML = '<i class="ti '+cat.icon+'" aria-hidden="true"></i>'
+      + cat.label
+      + '<span class="cbadge" id="cbadge_'+cat.id+'">0/'+cat.items.length+'</span>';
+    btn.addEventListener('click', function(){ switchCat(this.getAttribute('data-cat')); });
+    nav.appendChild(btn);
+
+    // section
+    var sec = document.createElement('div');
+    sec.className = 'catsec' + (ci===0 ? ' on' : '');
+    sec.id = 'catsec_' + cat.id;
+
+    var hdr = document.createElement('div');
+    hdr.className = 'catshdr';
+    hdr.innerHTML = '<div class="catshico"><i class="ti '+cat.icon+'" aria-hidden="true"></i></div>'
+      + '<div><div class="catsname">'+cat.label+'</div>'
+      + '<div class="catscnt">'+cat.items.length+' points a controler</div></div>';
+    sec.appendChild(hdr);
+
+    cat.items.forEach(function(item){
+      var key = item.replace(/[^a-zA-Z0-9]/g, '_');
+      var div = document.createElement('div');
+      div.className = 'citm';
+      div.id = 'citm_' + key;
+
+      var rbtns = '';
+      RATS.forEach(function(r){
+        rbtns += '<button class="rbtn '+r.cls+'" id="rbtn_'+key+'_'+r.k+'">'
+          + '<i class="ti '+r.ic+'" aria-hidden="true"></i>'+r.l+'</button>';
       });
-      result.textContent = '✗ Mauvaise réponse. La bonne réponse était Paris !';
-      result.className = 'result fail';
+
+      div.innerHTML =
+        '<div class="citop">'
+          +'<span class="cilbl">'+item+'</span>'
+          +'<span class="cipill" id="pill_'+key+'"></span>'
+        +'</div>'
+        +'<div class="gauwrap">'
+          +'<div class="gaulbls">'
+            +'<span class="gaul ok">OK</span>'
+            +'<span class="gaul mo">Moyen</span>'
+            +'<span class="gaul af">A faire</span>'
+            +'<span class="gaul cr">Critique</span>'
+          +'</div>'
+          +'<div class="gautrack" id="gau_'+key+'">'
+            +'<div class="gauseg" data-item="'+item+'" data-r="ok"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="mo"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="af"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="cr"></div>'
+          +'</div>'
+        +'</div>'
+        +'<div class="ratrow">'+rbtns+'</div>'
+        +'<div class="acts">'
+          +'<button class="abtn" id="abtn_note_'+key+'"><i class="ti ti-pencil" aria-hidden="true"></i>Note</button>'
+          +'<button class="abtn" id="abtn_photo_'+key+'"><i class="ti ti-camera" aria-hidden="true"></i>Photo</button>'
+        +'</div>'
+        +'<div class="notefld" id="notefld_'+key+'"><input type="text" placeholder="Observation..." id="noteinp_'+key+'"></div>'
+        +'<div class="photofld" id="photofld_'+key+'">'
+          +'<label class="photolbl" for="photoinp_'+key+'"><i class="ti ti-camera-plus" aria-hidden="true"></i>Ajouter une photo</label>'
+          +'<input class="photoinp" type="file" id="photoinp_'+key+'" accept="image/*" capture="environment" multiple>'
+          +'<div class="thumbs" id="thumbs_'+key+'"></div>'
+        +'</div>';
+
+      sec.appendChild(div);
+      cont.appendChild(sec);
+
+      // Events for this item
+      (function(it, ky){
+        // Rating buttons
+        RATS.forEach(function(r){
+          document.getElementById('rbtn_'+ky+'_'+r.k).addEventListener('click', function(){
+            applyRating(it, r.k);
+          });
+        });
+        // Gauge segments
+        var segs = document.querySelectorAll('#gau_'+ky+' .gauseg');
+        segs.forEach(function(seg){
+          seg.addEventListener('click', function(){
+            applyRating(this.getAttribute('data-item'), this.getAttribute('data-r'));
+          });
+        });
+        // Note toggle
+        document.getElementById('abtn_note_'+ky).addEventListener('click', function(){
+          var fld = document.getElementById('notefld_'+ky);
+          fld.classList.toggle('on');
+          this.classList.toggle('on', fld.classList.contains('on'));
+          if(fld.classList.contains('on')) document.getElementById('noteinp_'+ky).focus();
+        });
+        // Note input
+        document.getElementById('noteinp_'+ky).addEventListener('input', function(){
+          STATE[it].note = this.value;
+        });
+        // Photo toggle
+        document.getElementById('abtn_photo_'+ky).addEventListener('click', function(){
+          var fld = document.getElementById('photofld_'+ky);
+          fld.classList.toggle('on');
+          this.classList.toggle('on', fld.classList.contains('on'));
+        });
+        // Photo input
+        document.getElementById('photoinp_'+ky).addEventListener('change', function(){
+          var files = Array.prototype.slice.call(this.files);
+          files.forEach(function(file){
+            var reader = new FileReader();
+            reader.onload = function(e){
+              STATE[it].photos.push(e.target.result);
+              renderThumbs(it, ky);
+            };
+            reader.readAsDataURL(file);
+          });
+          this.value = '';
+        });
+      })(item, key);
+    });
+
+    // Append section AFTER all items processed
+    cont.appendChild(sec);
+  });
+}
+
+function switchCat(catId){
+  document.querySelectorAll('.catbtn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-cat')===catId);
+  });
+  document.querySelectorAll('.catsec').forEach(function(s){
+    s.classList.toggle('on', s.id==='catsec_'+catId);
+  });
+  document.getElementById('scr2').scrollTop = 0;
+}
+
+// ── RATING ────────────────────────────────────────────────────────────────────
+var PILLSTYLES = {
+  ok:  'color:var(--ok);background:var(--okbg);border-color:var(--okb)',
+  mo:  'color:var(--mo);background:var(--mobg);border-color:var(--mob)',
+  af:  'color:var(--af);background:var(--afbg);border-color:var(--afb)',
+  cr:  'color:var(--cr);background:var(--crbg);border-color:var(--crb)'
+};
+var PILLLABELS = {ok:'OK', mo:'Moyen', af:'A faire', cr:'Critique'};
+var ITEMCLS    = {ok:'rok', mo:'rmo', af:'raf', cr:'rcr'};
+var RATORDER   = ['ok','mo','af','cr'];
+
+function applyRating(item, rat){
+  STATE[item].rating = rat;
+  var key = item.replace(/[^a-zA-Z0-9]/g,'_');
+
+  // Item border
+  var citmEl = document.getElementById('citm_'+key);
+  citmEl.className = 'citm ' + ITEMCLS[rat];
+
+  // Buttons
+  RATS.forEach(function(r){
+    var b = document.getElementById('rbtn_'+key+'_'+r.k);
+    if(b){ b.classList.toggle('sel', r.k===rat); }
+  });
+
+  // Gauge
+  var segs = document.querySelectorAll('#gau_'+key+' .gauseg');
+  var idx = RATORDER.indexOf(rat);
+  segs.forEach(function(seg, i){
+    seg.className = 'gauseg';
+    if(i<=idx){
+      RATS.forEach(function(r){ if(r.k===rat) seg.classList.add(r.gcls); });
     }
-    result.style.display = 'block';
-    document.getElementById('restart').style.display = 'block';
+  });
 
-    sync.textContent = '⏳ Envoi vers Google Sheets…';
-    sync.style.display = 'block';
-    sync.style.color = '#888';
+  // Pill
+  var pill = document.getElementById('pill_'+key);
+  pill.textContent = PILLLABELS[rat];
+  pill.style.cssText = PILLSTYLES[rat];
+  pill.style.display = 'inline-block';
 
-    const now = new Date().toLocaleString('fr-FR');
-    const ddnFormatted = new Date(ddn).toLocaleDateString('fr-FR');
-    const url = WEBHOOK
-      + '?prenom=' + encodeURIComponent(prenom)
-      + '&ddn=' + encodeURIComponent(ddnFormatted)
-      + '&reponse=' + encodeURIComponent(choix)
-      + '&correct=' + encodeURIComponent(isCorrect ? 'Oui' : 'Non')
-      + '&date=' + encodeURIComponent(now);
+  updateProgress();
+  updateCatBtns();
+}
 
-    try {
-      await fetch(url, { method: 'GET', mode: 'no-cors' });
-      sync.textContent = '✓ Résultat enregistré dans Google Sheets !';
-      sync.style.color = '#1A7A4A';
-    } catch(e) {
-      sync.textContent = '✗ Erreur réseau.';
-      sync.style.color = '#C0392B';
-    }
+function updateProgress(){
+  var total = Object.keys(STATE).length;
+  var done  = 0;
+  Object.keys(STATE).forEach(function(k){ if(STATE[k].rating) done++; });
+  document.getElementById('prog_lbl').textContent = done + ' / ' + total + ' evalues';
+}
+
+function updateCatBtns(){
+  CATS.forEach(function(cat){
+    var ratings = cat.items.map(function(i){ return STATE[i].rating; });
+    var done    = ratings.filter(Boolean).length;
+    var btn     = document.querySelector('.catbtn[data-cat="'+cat.id+'"]');
+    var bdg     = document.getElementById('cbadge_'+cat.id);
+    if(bdg) bdg.textContent = done + '/' + cat.items.length;
+    btn.classList.remove('warn','good');
+    if(ratings.some(function(r){ return r==='cr'||r==='af'; })) btn.classList.add('warn');
+    else if(done===cat.items.length && ratings.every(function(r){ return r==='ok'||r==='mo'; })) btn.classList.add('good');
+  });
+}
+
+function renderThumbs(item, key){
+  var cont = document.getElementById('thumbs_'+key);
+  cont.innerHTML = '';
+  STATE[item].photos.forEach(function(src, idx){
+    var wrap = document.createElement('div');
+    wrap.className = 'twrap';
+    var img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = src;
+    var del = document.createElement('button');
+    del.className = 'tdel';
+    del.textContent = 'x';
+    (function(i){ del.addEventListener('click', function(){ STATE[item].photos.splice(i,1); renderThumbs(item, key); }); })(idx);
+    wrap.appendChild(img);
+    wrap.appendChild(del);
+    cont.appendChild(wrap);
+  });
+}
+
+// ── SUMMARY ─────────────────────────────────────────────────────────────────
+function buildSummary(){
+  var prenom  = document.getElementById('inp_prenom').value  || '';
+  var date    = document.getElementById('inp_date').value    || '';
+  var marque  = document.getElementById('inp_marque').value  || '';
+  var modele  = document.getElementById('inp_modele').value  || '';
+  var plaque  = getPlaque();
+  var km      = document.getElementById('inp_km').value      || '';
+  var comment = document.getElementById('inp_comment').value || '';
+
+  // Encadre bleu vehicule - tout en un, sans doublon
+  var kmTxt = km ? Number(km).toLocaleString('fr-FR') + ' km' : '---';
+  var vehHtml =
+    '<div class="vhero">'
+    + '<div class="vhtop">'
+    +   '<div class="vhico"><i class="ti ti-car" aria-hidden="true"></i></div>'
+    +   '<div>'
+    +     '<div class="vhname">' + (marque||'---') + ' ' + (modele||'') + '</div>'
+    +     '<div class="vhsub">Controle du ' + (date||'---') + ' par ' + (prenom||'---') + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="vhdetrow">'
+    +   '<div class="vhplq">' + (plaque||'-- -- --') + '</div>'
+    +   '<div class="vhinfos">'
+    +     '<div class="vhinfo"><i class="ti ti-road" aria-hidden="true"></i>' + kmTxt + '</div>'
+    +     '<div class="vhinfo"><i class="ti ti-user" aria-hidden="true"></i>' + (prenom||'---') + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  // Bloc commentaire si renseigne
+  if(comment){
+    vehHtml +=
+      '<div class="commentblk">'
+      + '<div class="commenthdr"><i class="ti ti-message-2" aria-hidden="true"></i>Commentaire general</div>'
+      + '<div class="commenttxt">' + comment.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+      + '</div>';
   }
 
-  function restart() {
-    document.querySelectorAll('.answer-btn').forEach(b => { b.disabled = false; b.className = 'answer-btn'; });
-    document.getElementById('prenom-input').disabled = false;
-    document.getElementById('ddn-input').disabled = false;
-    document.getElementById('prenom-input').value = '';
-    document.getElementById('ddn-input').value = '';
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('restart').style.display = 'none';
-    document.getElementById('sync-status').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'none';
+  document.getElementById('sum_veh').innerHTML = vehHtml;
+
+  var cnt = {ok:0,mo:0,af:0,cr:0};
+  Object.keys(STATE).forEach(function(k){ var r=STATE[k].rating; if(r) cnt[r]++; });
+
+  document.getElementById('sum_stats').innerHTML =
+      '<div class="stat ok"><div class="si"><i class="ti ti-circle-check"></i></div><div class="sn">' + cnt.ok + '</div><div class="sl">OK</div></div>'
+    + '<div class="stat mo"><div class="si"><i class="ti ti-alert-circle"></i></div><div class="sn">' + cnt.mo + '</div><div class="sl">Moyen</div></div>'
+    + '<div class="stat af"><div class="si"><i class="ti ti-tool"></i></div><div class="sn">' + cnt.af + '</div><div class="sl">A faire</div></div>'
+    + '<div class="stat cr"><div class="si"><i class="ti ti-alert-triangle"></i></div><div class="sn">' + cnt.cr + '</div><div class="sl">Critique</div></div>';
+
+  var entries = Object.keys(STATE).map(function(k){ return {item:k, data:STATE[k]}; });
+  var crits  = entries.filter(function(e){ return e.data.rating==='cr'; });
+  var afaire = entries.filter(function(e){ return e.data.rating==='af'; });
+  var moyen  = entries.filter(function(e){ return e.data.rating==='mo'; });
+
+  function mkBlock(title, icon, bgvar, txtvar, bclass, list, blbl){
+    if(!list.length) return '';
+    var rows = list.map(function(e){
+      return '<div class="irow">'
+        + '<div style="flex:1">'
+        +   '<div class="iname">' + e.item + '</div>'
+        +   '<div class="icat">' + (CATMAP[e.item]||'') + '</div>'
+        +   (e.data.note ? '<div class="inote">' + e.data.note + '</div>' : '')
+        + '</div>'
+        + '<span class="ibadge ' + bclass + '">' + blbl + '</span>'
+        + '</div>';
+    }).join('');
+    return '<div class="iblk">'
+      + '<div class="ibhdr" style="background:' + bgvar + '">'
+      +   '<i class="ti ' + icon + '" aria-hidden="true" style="color:' + txtvar + '"></i>'
+      +   '<span class="ibhtit" style="color:' + txtvar + '">' + title + ' <span style="font-weight:400;font-size:12px">(' + list.length + ')</span></span>'
+      + '</div>' + rows + '</div>';
   }
+
+  var issueHtml = '';
+  issueHtml += mkBlock('Points critiques','ti-alert-triangle','var(--crbg)','var(--cr)','cr',crits,'Critique');
+  issueHtml += mkBlock('A faire','ti-tool','var(--afbg)','var(--af)','af',afaire,'A faire');
+  issueHtml += mkBlock('Points moyens','ti-alert-circle','var(--mobg)','var(--mo)','mo',moyen,'Moyen');
+  if(!crits.length && !afaire.length && !moyen.length){
+    issueHtml = '<div class="iblk"><div style="text-align:center;padding:22px;color:var(--ok)">'
+      + '<i class="ti ti-circle-check" style="font-size:34px;display:block;margin-bottom:8px"></i>'
+      + '<strong style="font-size:14px">Aucun point d\'attention</strong>'
+      + '<div style="font-size:12px;color:var(--txt3);margin-top:4px">Tous les controles sont corrects</div>'
+      + '</div></div>';
+  }
+  document.getElementById('sum_issues').innerHTML = issueHtml;
+
+  document.getElementById('scriptbox').textContent =
+    'function doPost(e) {\n'
+    + '  var data = JSON.parse(e.postData.contents);\n'
+    + '  var ss = SpreadsheetApp.getActiveSpreadsheet();\n'
+    + '  var sheet = ss.getSheetByName("Audits") || ss.insertSheet("Audits");\n'
+    + '  if (sheet.getLastRow() === 0) sheet.appendRow(Object.keys(data));\n'
+    + '  sheet.appendRow(Object.values(data));\n'
+    + '  return ContentService\n'
+    + '    .createTextOutput(JSON.stringify({status:"ok"}))\n'
+    + '    .setMimeType(ContentService.MimeType.JSON);\n'
+    + '}';
+}
+
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function doExport(){
+  var url = document.getElementById('inp_sheeturl').value.trim() || 'https://script.google.com/macros/s/AKfycbz3bLifV9jJmPNjATlnk7LJi8oYD4oiDRMzxPAzilV39TRVbiT9QF5G_q_dDVNNIBDC/exec';
+  var st  = document.getElementById('exp_status');
+  if(!url){ st.className='expst err'; st.innerHTML='<i class="ti ti-alert-circle"></i> Saisissez l\'URL du script.'; return; }
+  st.className='expst'; st.innerHTML='<i class="ti ti-loader"></i> Envoi en cours...';
+  var p = {
+    'Prenom':  document.getElementById('inp_prenom').value||'',
+    'Date':    document.getElementById('inp_date').value||'',
+    'Marque':  document.getElementById('inp_marque').value||'',
+    'Modele':  document.getElementById('inp_modele').value||'',
+    'Plaque':  getPlaque(),
+    'Km':      document.getElementById('inp_km').value||''
+  };
+  CATS.forEach(function(cat){
+    cat.items.forEach(function(it){
+      p[it]           = STATE[it].rating || 'Non evalue';
+      p[it+' Note']   = STATE[it].note   || '';
+      p[it+' Photos'] = STATE[it].photos.length + ' photo(s)';
+    });
+  });
+  p['Commentaire'] = document.getElementById('inp_comment').value||'';
+  // Utilisation d'un formulaire pour eviter les restrictions CORS en local
+  var form = new FormData();
+  form.append('data', JSON.stringify(p));
+
+  fetch(url, {method:'POST', body: form, mode:'no-cors'})
+    .then(function(){
+      // Afficher ecran de confirmation puis reset automatique
+      showConfirmation();
+    })
+    .catch(function(){
+      st.className='expst err';
+      st.innerHTML='<i class="ti ti-wifi-off"></i> Verifiez votre connexion internet.';
+    });
+}
+
+function showConfirmation(){
+  // Masquer tous les ecrans et navbars
+  document.getElementById('scr1').className = 'scr';
+  document.getElementById('scr2').className = 'scr';
+  document.getElementById('scr3').className = 'scr';
+  document.getElementById('scr4').className = 'scr';
+  document.getElementById('nav1').className = 'navbar';
+  document.getElementById('nav2').className = 'navbar';
+  document.getElementById('nav3').className = 'navbar';
+  // Afficher ecran de confirmation
+  document.getElementById('scr_confirm').className = 'scr on';
+  window.scrollTo(0,0);
+  // Lancer la barre de progression
+  setTimeout(function(){
+    var bar = document.getElementById('confirm_bar');
+    if(bar) bar.style.width = '100%';
+  }, 50);
+  // Reset automatique apres 4 secondes
+  setTimeout(function(){
+    doReset(true);
+  }, 4000);
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function doReset(skipConfirm){
+  if(!skipConfirm && !confirm('Demarrer un nouvel audit ? Toutes les donnees seront effacees.')) return;
+  initState();
+  buildControls();
+  document.getElementById('inp_prenom').value  = '';
+  document.getElementById('inp_modele').value  = '';
+  document.getElementById('inp_km').value      = '';
+  document.getElementById('inp_comment').value = '';
+  document.getElementById('inp_marque').value  = '';
+  document.getElementById('inp_plaque').value  = '';
+  document.getElementById('plq_display').textContent = '-- -- --';
+  document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('exp_status').textContent = '';
+  showScr(1);
+  toast('Nouvel audit demarre');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg){
+  var el = document.getElementById('toast_el');
+  el.textContent = msg;
+  el.className = 'toast on';
+  setTimeout(function(){ el.className = 'toast'; }, 2800);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
+buildControls();
+
+// Attacher les evenements APRES que tout le DOM est pret
+document.getElementById('btn_goto2').addEventListener('click', function(){ showScr(2); });
+document.getElementById('btn_back1').addEventListener('click', function(){ showScr(1); });
+document.getElementById('btn_back1b').addEventListener('click', function(){ showScr(1); });
+document.getElementById('btn_goto3').addEventListener('click', function(){ showScr(3); });
+document.getElementById('btn_back2').addEventListener('click', function(){ showScr(2); });
+document.getElementById('btn_back2b').addEventListener('click', function(){ showScr(2); });
+document.getElementById('btn_goto4').addEventListener('click', function(){ showScr(4); });
+document.getElementById('btn_back3').addEventListener('click', function(){ showScr(3); });
+document.getElementById('btn_export').addEventListener('click', doExport);
+document.getElementById('btn_reset').addEventListener('click', doReset);
 </script>
 </body>
 </html>
