@@ -69,7 +69,7 @@
     margin-bottom: 6px;
   }
 
-  input[type="text"] {
+  input[type="text"], input[type="date"] {
     width: 100%;
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
@@ -78,12 +78,12 @@
     font-family: 'DM Sans', sans-serif;
     color: var(--text);
     background: #FAFAFA;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     outline: none;
     transition: border-color 0.2s;
   }
-  input[type="text"]:focus { border-color: var(--accent); background: #fff; }
-  input[type="text"]:disabled { opacity: 0.5; }
+  input:focus { border-color: var(--accent); background: #fff; }
+  input:disabled { opacity: 0.5; }
 
   .question {
     font-family: 'Syne', sans-serif;
@@ -157,7 +157,8 @@
     display: none;
     font-size: 13px;
     color: var(--danger);
-    margin-top: 6px;
+    margin-top: -12px;
+    margin-bottom: 12px;
   }
 
   .sync-status {
@@ -195,6 +196,9 @@
   <p class="label">Ton prénom</p>
   <input type="text" id="prenom-input" placeholder="Ex : Marie" autocomplete="off" />
 
+  <p class="label">Ta date de naissance</p>
+  <input type="date" id="ddn-input" />
+
   <p class="question">Quelle est la capitale de la France ?</p>
 
   <div class="answers" id="answers">
@@ -210,7 +214,7 @@
   </div>
 
   <div class="result" id="result"></div>
-  <div class="error-msg" id="error-msg">⚠️ Merci de saisir ton prénom avant de répondre.</div>
+  <div class="error-msg" id="error-msg"></div>
   <div class="sync-status" id="sync-status"></div>
 
   <button class="restart-btn" id="restart" onclick="restart()">↺ Recommencer</button>
@@ -221,16 +225,32 @@
 
   async function answer(btn, isCorrect, choix) {
     const prenom = document.getElementById('prenom-input').value.trim();
+    const ddn = document.getElementById('ddn-input').value;
     const errorMsg = document.getElementById('error-msg');
-    if (!prenom) {
+
+    if (!prenom && !ddn) {
+      errorMsg.textContent = '⚠️ Merci de saisir ton prénom et ta date de naissance.';
       errorMsg.style.display = 'block';
       document.getElementById('prenom-input').focus();
+      return;
+    }
+    if (!prenom) {
+      errorMsg.textContent = '⚠️ Merci de saisir ton prénom.';
+      errorMsg.style.display = 'block';
+      document.getElementById('prenom-input').focus();
+      return;
+    }
+    if (!ddn) {
+      errorMsg.textContent = '⚠️ Merci de saisir ta date de naissance.';
+      errorMsg.style.display = 'block';
+      document.getElementById('ddn-input').focus();
       return;
     }
     errorMsg.style.display = 'none';
 
     document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
     document.getElementById('prenom-input').disabled = true;
+    document.getElementById('ddn-input').disabled = true;
 
     const result = document.getElementById('result');
     const sync = document.getElementById('sync-status');
@@ -255,8 +275,10 @@
     sync.style.color = '#888';
 
     const now = new Date().toLocaleString('fr-FR');
+    const ddnFormatted = new Date(ddn).toLocaleDateString('fr-FR');
     const url = WEBHOOK
       + '?prenom=' + encodeURIComponent(prenom)
+      + '&ddn=' + encodeURIComponent(ddnFormatted)
       + '&reponse=' + encodeURIComponent(choix)
       + '&correct=' + encodeURIComponent(isCorrect ? 'Oui' : 'Non')
       + '&date=' + encodeURIComponent(now);
@@ -274,7 +296,9 @@
   function restart() {
     document.querySelectorAll('.answer-btn').forEach(b => { b.disabled = false; b.className = 'answer-btn'; });
     document.getElementById('prenom-input').disabled = false;
+    document.getElementById('ddn-input').disabled = false;
     document.getElementById('prenom-input').value = '';
+    document.getElementById('ddn-input').value = '';
     document.getElementById('result').style.display = 'none';
     document.getElementById('restart').style.display = 'none';
     document.getElementById('sync-status').style.display = 'none';
