@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Capitale de la France</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F2EB;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #888;
+    --accent: #2D5BE3;
+    --accent-light: #EBF0FD;
+    --success: #1A7A4A;
+    --success-bg: #E8F7EF;
+    --danger: #C0392B;
+    --danger-bg: #FDEDEB;
+    --border: #E0DDD5;
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 100px;
+    margin-bottom: 1.25rem;
+  }
+
+  .progress {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    margin-bottom: 0.75rem;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: #FAFAFA;
+    margin-bottom: 1.5rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: var(--accent); background: #fff; }
+  input[type="text"]:disabled { opacity: 0.5; }
+
+  .question {
+    font-family: 'Syne', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+  }
+
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .answer-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FAFAFA;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .answer-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .answer-btn:disabled { cursor: default; }
+
+  .letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    flex-shrink: 0;
+  }
+
+  .answer-btn.correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .answer-btn.correct .letter { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .answer-btn.wrong { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+  .answer-btn.wrong .letter { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+
+  .result {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .result.success { background: var(--success-bg); color: var(--success); }
+  .result.fail { background: var(--danger-bg); color: var(--danger); }
+
+  .error-msg {
+    display: none;
+    font-size: 13px;
+    color: var(--danger);
+    margin-top: 6px;
+  }
+
+  .sync-status {
+    display: none;
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .restart-btn {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .restart-btn:hover { background: #EAE7DF; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <span class="badge">🌍 Géographie</span>
+  <p class="progress">Question 1 / 1</p>
+
+  <p class="label">Ton prénom</p>
+  <input type="text" id="prenom-input" placeholder="Ex : Marie" autocomplete="off" />
+
+  <p class="question">Quelle est la capitale de la France ?</p>
+
+  <div class="answers" id="answers">
+    <button class="answer-btn" onclick="answer(this, false, 'Lyon')">
+      <span class="letter">A</span> Lyon
+    </button>
+    <button class="answer-btn" onclick="answer(this, true, 'Paris')">
+      <span class="letter">B</span> Paris
+    </button>
+    <button class="answer-btn" onclick="answer(this, false, 'Marseille')">
+      <span class="letter">C</span> Marseille
+    </button>
+  </div>
+
+  <div class="result" id="result"></div>
+  <div class="error-msg" id="error-msg">⚠️ Merci de saisir ton prénom avant de répondre.</div>
+  <div class="sync-status" id="sync-status"></div>
+
+  <button class="restart-btn" id="restart" onclick="restart()">↺ Recommencer</button>
+</div>
+
+<script>
+  const WEBHOOK = "https://script.google.com/macros/s/AKfycbzpuCOS0bjVR8yFSG08Ps-KE1ysjeqKpss1GLa6QeaD_iAu0oAI_S7VytA_Lw4lcpMTqg/exec";
+
+  async function answer(btn, isCorrect, choix) {
+    const prenom = document.getElementById('prenom-input').value.trim();
+    const errorMsg = document.getElementById('error-msg');
+    if (!prenom) {
+      errorMsg.style.display = 'block';
+      document.getElementById('prenom-input').focus();
+      return;
+    }
+    errorMsg.style.display = 'none';
+
+    document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+    document.getElementById('prenom-input').disabled = true;
+
+    const result = document.getElementById('result');
+    const sync = document.getElementById('sync-status');
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      result.textContent = '✓ Bonne réponse ! Paris est bien la capitale de la France.';
+      result.className = 'result success';
+    } else {
+      btn.classList.add('wrong');
+      document.querySelectorAll('.answer-btn').forEach(b => {
+        if (b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+      });
+      result.textContent = '✗ Mauvaise réponse. La bonne réponse était Paris !';
+      result.className = 'result fail';
+    }
+    result.style.display = 'block';
+    document.getElementById('restart').style.display = 'block';
+
+    sync.textContent = '⏳ Envoi vers Google Sheets…';
+    sync.style.display = 'block';
+    sync.style.color = '#888';
+
+    const now = new Date().toLocaleString('fr-FR');
+    const url = WEBHOOK
+      + '?prenom=' + encodeURIComponent(prenom)
+      + '&reponse=' + encodeURIComponent(choix)
+      + '&correct=' + encodeURIComponent(isCorrect ? 'Oui' : 'Non')
+      + '&date=' + encodeURIComponent(now);
+
+    try {
+      await fetch(url, { method: 'GET', mode: 'no-cors' });
+      sync.textContent = '✓ Résultat enregistré dans Google Sheets !';
+      sync.style.color = '#1A7A4A';
+    } catch(e) {
+      sync.textContent = '✗ Erreur réseau.';
+      sync.style.color = '#C0392B';
+    }
+  }
+
+  function restart() {
+    document.querySelectorAll('.answer-btn').forEach(b => { b.disabled = false; b.className = 'answer-btn'; });
+    document.getElementById('prenom-input').disabled = false;
+    document.getElementById('prenom-input').value = '';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('restart').style.display = 'none';
+    document.getElementById('sync-status').style.display = 'none';
+    document.getElementById('error-msg').style.display = 'none';
+  }
+</script>
+</body>
+</html>
