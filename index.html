@@ -57,7 +57,7 @@ html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-
 .fld:last-child{margin-bottom:0}
 .fld label{font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:6px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .fld label i{font-size:13px;color:var(--acc)}
-.fld input,.fld select,.fld textarea{width:100%;padding:11px 14px;border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;background:var(--surf2);color:var(--txt);font-family:var(--font);-webkit-appearance:none;appearance:none;outline:none}
+.fld input,.fld select,.fld textarea{width:100%;padding:11px 14px;border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;background:var(--surf2);color:var(--txt);font-family:var(--font);-webkit-appearance:none;appearance:none;outline:none;transition:border-color .2s,background .2s}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--acc);background:#fff}
 .fld textarea{resize:none;min-height:110px;line-height:1.6}
 .fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A5852' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-color:var(--surf2);padding-right:38px}
@@ -74,8 +74,20 @@ html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-
 .welcchips{display:flex;gap:7px;flex-wrap:wrap}
 .chip{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;display:flex;align-items:center;gap:5px;border:1.5px solid rgba(255,255,255,.2)}
 
-/* CAT NAV */
-.catnav{display:flex;overflow-x:auto;gap:7px;padding:14px 14px 0;scrollbar-width:none}
+/* ═══════════════════════════════════════════════════════════
+   [CORRECTION 2] CAT NAV - sticky fixe sous le header
+   Header height = padding(13px*2) + icon(36px) = 62px => top:62px
+   ═══════════════════════════════════════════════════════════ */
+.catnav{
+  display:flex;overflow-x:auto;gap:7px;
+  padding:10px 14px;
+  scrollbar-width:none;
+  position:sticky;          /* Sticky sous le header */
+  top:62px;                 /* = hauteur exacte du header */
+  z-index:48;               /* Sous le header (z-index:50) */
+  background:var(--bg);     /* Fond opaque pour masquer le contenu qui defile */
+  border-bottom:1.5px solid var(--brd);
+}
 .catnav::-webkit-scrollbar{display:none}
 .catbtn{white-space:nowrap;padding:8px 13px;border-radius:22px;font-size:12px;font-weight:600;border:2px solid var(--brd);background:var(--surf);color:var(--txt2);cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;font-family:var(--font)}
 .catbtn i{font-size:13px}
@@ -159,10 +171,6 @@ html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-
 .vhinfo{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
 .vhinfo i{font-size:13px}
 .commentblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.commenthdr{padding:10px 14px;background:var(--surf2);border-bottom:2px solid var(--brd);font-size:11px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.08em}
-.commenthdr i{font-size:15px;color:var(--acc)}
-.commenttxt{padding:12px 14px;font-size:14px;color:var(--txt);line-height:1.6;white-space:pre-wrap}
-.commentblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
 .commenthdr{padding:10px 14px;background:var(--surf2);border-bottom:2px solid var(--brd);font-size:12px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.06em}
 .commenthdr i{font-size:15px;color:var(--acc)}
 .commenttxt{padding:12px 14px;font-size:14px;color:var(--txt);line-height:1.6;white-space:pre-wrap}
@@ -194,24 +202,22 @@ html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-
 .ibadge.af{color:var(--af);background:var(--afbg);border-color:var(--afb)}
 .ibadge.mo{color:var(--mo);background:var(--mobg);border-color:var(--mob)}
 
-/* EXPORT */
+/* EXPORT - [CORRECTION 5] Interface propre, suppression des elements techniques */
 .expcard{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px}
-.expcard label{font-size:11px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:6px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
-.expurl{width:100%;padding:10px 13px;border:2px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--surf2);color:var(--txt);font-family:var(--mono);margin-bottom:10px;outline:none}
-.expurl:focus{border-color:var(--acc)}
-.btnexp{width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
-.expst{font-size:13px;color:var(--txt2);padding:5px 0;min-height:32px;display:flex;align-items:center;gap:6px;font-weight:500}
+.btnexp{width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.btnexp:disabled{opacity:.55;cursor:not-allowed}
+.expst{font-size:13px;color:var(--txt2);padding:5px 0;min-height:28px;display:flex;align-items:center;gap:6px;font-weight:500}
 .expst.ok{color:var(--ok)}.expst.err{color:var(--cr)}
-details{background:var(--surf2);border:2px solid var(--brd);border-radius:var(--rs);padding:10px 14px;margin-top:10px}
-summary{font-size:12px;color:var(--txt2);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-weight:600}
-summary::-webkit-details-marker{display:none}
-.scriptbox{background:#1A1B2E;color:#A9B7FF;font-family:var(--mono);font-size:11px;padding:14px;border-radius:var(--rs);margin-top:10px;overflow-x:auto;line-height:1.8;white-space:pre;border:2px solid #0D0E1A}
 .btnreset{padding:13px 16px;background:transparent;color:var(--cr);border:2px solid var(--crb);border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-top:8px}
 .btnreset:hover{background:var(--crbg)}
 .chint{font-size:12px;color:var(--txt3);margin-bottom:12px;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
 .chint i{font-size:15px;color:var(--acc);margin-top:1px;flex-shrink:0}
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:#1E1D1A;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:#1E1D1A;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* [CORRECTION 7] Animation spinner pour le loader d'envoi */
+@keyframes spin { to { transform:rotate(360deg); } }
+.spin-icon{display:inline-block;animation:spin .9s linear infinite;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -275,6 +281,7 @@ summary::-webkit-details-marker{display:none}
     <div style="flex:1"><div class="htit">Controles visuels</div><div class="hsub" id="prog_lbl">0 / 26 evalues</div></div>
     <span class="hstep">2 / 4</span>
   </div>
+  <!-- [CORRECTION 2] catnav - position sticky geree par le CSS (top:62px) -->
   <div class="catnav" id="catnav"></div>
   <div id="ctrl_cont"></div>
   <div class="navbar" id="nav2">
@@ -319,16 +326,13 @@ summary::-webkit-details-marker{display:none}
   <div class="sec"><div id="sum_issues"></div></div>
   <div class="sec" style="padding-bottom:100px">
     <div class="sectit"><i class="ti ti-upload"></i>Export Google Sheets</div>
+    <!-- [CORRECTION 5] Interface propre : URL cachee dans le code JS (SCRIPT_URL)
+         Supprime : champ URL visible, label, details, scriptbox, texte technique -->
     <div class="expcard">
-      <label><i class="ti ti-brand-google"></i>URL Google Apps Script</label>
-      <input class="expurl" type="url" id="inp_sheeturl" value="https://script.google.com/macros/s/AKfycbz3bLifV9jJmPNjATlnk7LJi8oYD4oiDRMzxPAzilV39TRVbiT9QF5G_q_dDVNNIBDC/exec">
-      <button class="btnexp" id="btn_export"><i class="ti ti-table-export"></i>Envoyer vers Google Sheets</button>
+      <button class="btnexp" id="btn_export">
+        <i class="ti ti-table-export"></i>Envoyer le rapport
+      </button>
       <div class="expst" id="exp_status"></div>
-      <details>
-        <summary><i class="ti ti-code"></i>Script Apps Script a installer</summary>
-        <p style="font-size:12px;color:var(--txt2);margin:8px 0 4px;line-height:1.6">Extensions > Apps Script, coller puis Deployer > Nouvelle app Web (acces : Tout le monde) :</p>
-        <div class="scriptbox" id="scriptbox"></div>
-      </details>
     </div>
     <button class="btnreset" id="btn_reset"><i class="ti ti-refresh"></i>Nouvel audit</button>
   </div>
@@ -386,7 +390,15 @@ function initState(){
 }
 initState();
 
+// ── [CORRECTION 5] URL Apps Script cachee dans le code ────────────────────────
+// Remplacer par l'URL de votre propre deploiement Apps Script
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8oQzOQkBL4BCtHoVuF_HcO4QHE2A_Xk_FMPNuyn717PIqy2i-OhlFESEOofHZ1lPmlA/exec';
+
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
+// [CORRECTION 4] showScr() ne reinitialise jamais STATE.
+// buildControls() n'est appele qu'une fois (init) et a chaque doReset().
+// Toutes les donnees (ratings, notes, photos) sont donc preservees
+// pendant toute la session de navigation entre les ecrans.
 function showScr(n){
   document.getElementById('scr1').className = 'scr' + (n===1?' on':'');
   document.getElementById('scr2').className = 'scr' + (n===2?' on':'');
@@ -427,6 +439,49 @@ function getPlaque(){
   return (t === '-- -- --') ? '' : t;
 }
 
+// ── [CORRECTION 3] COMPRESSION IMAGE AVANT STOCKAGE ──────────────────────────
+// Redimensionne a max 1280px et compresse en JPEG 0.7 via canvas.
+// Evite les crash memoire sur mobile avec les photos haute resolution.
+function compressImage(file, callback){
+  var MAX_SIZE = 1280;  // pixels max (largeur ou hauteur)
+  var QUALITY  = 0.7;   // qualite JPEG (0 a 1)
+
+  var img = new Image();
+  var objectUrl = URL.createObjectURL(file);
+
+  img.onload = function(){
+    URL.revokeObjectURL(objectUrl); // Liberer la memoire immediatement
+
+    var w = img.naturalWidth;
+    var h = img.naturalHeight;
+
+    // Calculer les nouvelles dimensions en conservant le ratio
+    if(w > MAX_SIZE || h > MAX_SIZE){
+      if(w >= h){ h = Math.round(h * MAX_SIZE / w); w = MAX_SIZE; }
+      else       { w = Math.round(w * MAX_SIZE / h); h = MAX_SIZE; }
+    }
+
+    // Dessiner l'image redimensionnee sur un canvas
+    var canvas = document.createElement('canvas');
+    canvas.width  = w;
+    canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+    // Exporter en JPEG compresse (base64)
+    callback(canvas.toDataURL('image/jpeg', QUALITY));
+  };
+
+  img.onerror = function(){
+    // Fallback : FileReader direct si le canvas echoue
+    URL.revokeObjectURL(objectUrl);
+    var reader = new FileReader();
+    reader.onload = function(e){ callback(e.target.result); };
+    reader.readAsDataURL(file);
+  };
+
+  img.src = objectUrl;
+}
+
 // ── BUILD CONTROLS ────────────────────────────────────────────────────────────
 function buildControls(){
   var nav  = document.getElementById('catnav');
@@ -435,7 +490,7 @@ function buildControls(){
   cont.innerHTML = '';
 
   CATS.forEach(function(cat, ci){
-    // nav button
+    // Bouton de navigation de categorie
     var btn = document.createElement('button');
     btn.className = 'catbtn' + (ci===0 ? ' on' : '');
     btn.setAttribute('data-cat', cat.id);
@@ -445,7 +500,7 @@ function buildControls(){
     btn.addEventListener('click', function(){ switchCat(this.getAttribute('data-cat')); });
     nav.appendChild(btn);
 
-    // section
+    // Section de categorie
     var sec = document.createElement('div');
     sec.className = 'catsec' + (ci===0 ? ' on' : '');
     sec.id = 'catsec_' + cat.id;
@@ -456,6 +511,11 @@ function buildControls(){
       + '<div><div class="catsname">'+cat.label+'</div>'
       + '<div class="catscnt">'+cat.items.length+' points a controler</div></div>';
     sec.appendChild(hdr);
+
+    // IMPORTANT : on ajoute sec au DOM AVANT d'attacher les evenements,
+    // sinon document.getElementById() retourne null sur les elements detaches
+    // et plante tout le JS, rendant tous les boutons morts.
+    cont.appendChild(sec);
 
     cat.items.forEach(function(item){
       var key = item.replace(/[^a-zA-Z0-9]/g, '_');
@@ -501,58 +561,55 @@ function buildControls(){
         +'</div>';
 
       sec.appendChild(div);
-      cont.appendChild(sec);
 
-      // Events for this item
+      // Evenements pour cet item
       (function(it, ky){
-        // Rating buttons
+        // Boutons de notation
         RATS.forEach(function(r){
           document.getElementById('rbtn_'+ky+'_'+r.k).addEventListener('click', function(){
             applyRating(it, r.k);
           });
         });
-        // Gauge segments
+        // Segments de jauge
         var segs = document.querySelectorAll('#gau_'+ky+' .gauseg');
         segs.forEach(function(seg){
           seg.addEventListener('click', function(){
             applyRating(this.getAttribute('data-item'), this.getAttribute('data-r'));
           });
         });
-        // Note toggle
+        // Toggle note
         document.getElementById('abtn_note_'+ky).addEventListener('click', function(){
           var fld = document.getElementById('notefld_'+ky);
           fld.classList.toggle('on');
           this.classList.toggle('on', fld.classList.contains('on'));
           if(fld.classList.contains('on')) document.getElementById('noteinp_'+ky).focus();
         });
-        // Note input
+        // Saisie note -> sauvegarde dans STATE (persistance)
         document.getElementById('noteinp_'+ky).addEventListener('input', function(){
           STATE[it].note = this.value;
         });
-        // Photo toggle
+        // Toggle photo
         document.getElementById('abtn_photo_'+ky).addEventListener('click', function(){
           var fld = document.getElementById('photofld_'+ky);
           fld.classList.toggle('on');
           this.classList.toggle('on', fld.classList.contains('on'));
         });
-        // Photo input
+        // [CORRECTION 3] Photo : compression canvas avant stockage dans STATE
         document.getElementById('photoinp_'+ky).addEventListener('change', function(){
           var files = Array.prototype.slice.call(this.files);
+          var self  = this;
           files.forEach(function(file){
-            var reader = new FileReader();
-            reader.onload = function(e){
-              STATE[it].photos.push(e.target.result);
+            compressImage(file, function(compressed){
+              // Image compressée stockee dans STATE (deja reduite pour la memoire)
+              STATE[it].photos.push(compressed);
               renderThumbs(it, ky);
-            };
-            reader.readAsDataURL(file);
+            });
           });
-          this.value = '';
+          self.value = ''; // Reset pour permettre de re-selectionner le meme fichier
         });
       })(item, key);
     });
 
-    // Append section AFTER all items processed
-    cont.appendChild(sec);
   });
 }
 
@@ -563,7 +620,7 @@ function switchCat(catId){
   document.querySelectorAll('.catsec').forEach(function(s){
     s.classList.toggle('on', s.id==='catsec_'+catId);
   });
-  document.getElementById('scr2').scrollTop = 0;
+  window.scrollTo(0, 0); // Scroll en haut (catnav sticky reste visible)
 }
 
 // ── RATING ────────────────────────────────────────────────────────────────────
@@ -578,20 +635,20 @@ var ITEMCLS    = {ok:'rok', mo:'rmo', af:'raf', cr:'rcr'};
 var RATORDER   = ['ok','mo','af','cr'];
 
 function applyRating(item, rat){
-  STATE[item].rating = rat;
+  STATE[item].rating = rat; // Stockage dans STATE (persistant)
   var key = item.replace(/[^a-zA-Z0-9]/g,'_');
 
-  // Item border
+  // Bordure de l'item
   var citmEl = document.getElementById('citm_'+key);
   citmEl.className = 'citm ' + ITEMCLS[rat];
 
-  // Buttons
+  // Boutons de notation
   RATS.forEach(function(r){
     var b = document.getElementById('rbtn_'+key+'_'+r.k);
     if(b){ b.classList.toggle('sel', r.k===rat); }
   });
 
-  // Gauge
+  // Jauge
   var segs = document.querySelectorAll('#gau_'+key+' .gauseg');
   var idx = RATORDER.indexOf(rat);
   segs.forEach(function(seg, i){
@@ -601,7 +658,7 @@ function applyRating(item, rat){
     }
   });
 
-  // Pill
+  // Pastille
   var pill = document.getElementById('pill_'+key);
   pill.textContent = PILLLABELS[rat];
   pill.style.cssText = PILLSTYLES[rat];
@@ -650,7 +707,7 @@ function renderThumbs(item, key){
   });
 }
 
-// ── SUMMARY ─────────────────────────────────────────────────────────────────
+// ── SUMMARY ──────────────────────────────────────────────────────────────────
 function buildSummary(){
   var prenom  = document.getElementById('inp_prenom').value  || '';
   var date    = document.getElementById('inp_date').value    || '';
@@ -660,7 +717,6 @@ function buildSummary(){
   var km      = document.getElementById('inp_km').value      || '';
   var comment = document.getElementById('inp_comment').value || '';
 
-  // Encadre bleu vehicule - tout en un, sans doublon
   var kmTxt = km ? Number(km).toLocaleString('fr-FR') + ' km' : '---';
   var vehHtml =
     '<div class="vhero">'
@@ -680,7 +736,6 @@ function buildSummary(){
     + '</div>'
     + '</div>';
 
-  // Bloc commentaire si renseigne
   if(comment){
     vehHtml +=
       '<div class="commentblk">'
@@ -736,60 +791,75 @@ function buildSummary(){
       + '</div></div>';
   }
   document.getElementById('sum_issues').innerHTML = issueHtml;
-
-  document.getElementById('scriptbox').textContent =
-    'function doPost(e) {\n'
-    + '  var data = JSON.parse(e.postData.contents);\n'
-    + '  var ss = SpreadsheetApp.getActiveSpreadsheet();\n'
-    + '  var sheet = ss.getSheetByName("Audits") || ss.insertSheet("Audits");\n'
-    + '  if (sheet.getLastRow() === 0) sheet.appendRow(Object.keys(data));\n'
-    + '  sheet.appendRow(Object.values(data));\n'
-    + '  return ContentService\n'
-    + '    .createTextOutput(JSON.stringify({status:"ok"}))\n'
-    + '    .setMimeType(ContentService.MimeType.JSON);\n'
-    + '}';
+  // [CORRECTION 5] scriptbox supprime du HTML, plus besoin de le remplir ici
 }
 
 
-// ── EXPORT ────────────────────────────────────────────────────────────────────
+// ── [CORRECTIONS 5 + 6 + 7] EXPORT ──────────────────────────────────────────
 function doExport(){
-  var url = document.getElementById('inp_sheeturl').value.trim() || 'https://script.google.com/macros/s/AKfycbz3bLifV9jJmPNjATlnk7LJi8oYD4oiDRMzxPAzilV39TRVbiT9QF5G_q_dDVNNIBDC/exec';
+  var btn = document.getElementById('btn_export');
   var st  = document.getElementById('exp_status');
-  if(!url){ st.className='expst err'; st.innerHTML='<i class="ti ti-alert-circle"></i> Saisissez l\'URL du script.'; return; }
-  st.className='expst'; st.innerHTML='<i class="ti ti-loader"></i> Envoi en cours...';
+
+  // [CORRECTION 7] Desactiver le bouton, afficher le loader pendant l'envoi
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2 spin-icon"></i> Envoi du rapport\u2026';
+  st.className  = 'expst';
+  st.innerHTML  = '';
+
+  // Construction des infos vehicule
+  var vehicule = (
+    (document.getElementById('inp_marque').value || '') + ' ' +
+    (document.getElementById('inp_modele').value || '')
+  ).trim();
+
   var p = {
-    'Prenom':  document.getElementById('inp_prenom').value||'',
-    'Date':    document.getElementById('inp_date').value||'',
-    'Marque':  document.getElementById('inp_marque').value||'',
-    'Modele':  document.getElementById('inp_modele').value||'',
-    'Plaque':  getPlaque(),
-    'Km':      document.getElementById('inp_km').value||''
+    'Prenom':      document.getElementById('inp_prenom').value  || '',
+    'Date':        document.getElementById('inp_date').value    || '',
+    'Marque':      document.getElementById('inp_marque').value  || '',
+    'Modele':      document.getElementById('inp_modele').value  || '',
+    'Plaque':      getPlaque(),
+    'Km':          document.getElementById('inp_km').value      || '',
+    'Commentaire': document.getElementById('inp_comment').value || ''
   };
+
+  // [CORRECTION 6] Construction des items avec photos en base64 pour upload Drive
+  // Le Apps Script recevra ces donnees et uplaodera les photos vers Google Drive
+  var itemsData = [];
   CATS.forEach(function(cat){
     cat.items.forEach(function(it){
-      p[it]           = STATE[it].rating || 'Non evalue';
-      p[it+' Note']   = STATE[it].note   || '';
-      p[it+' Photos'] = STATE[it].photos.length + ' photo(s)';
+      itemsData.push({
+        vehicule:    vehicule,
+        categorie:   cat.label,
+        item:        it,
+        note:        STATE[it].rating    || 'Non evalue',
+        commentaire: STATE[it].note      || '',
+        photos:      STATE[it].photos    // Array de base64 deja compresses (correction 3)
+      });
     });
   });
-  p['Commentaire'] = document.getElementById('inp_comment').value||'';
-  // Utilisation d'un formulaire pour eviter les restrictions CORS en local
-  var form = new FormData();
-  form.append('data', JSON.stringify(p));
+  p['items'] = itemsData;
 
-  fetch(url, {method:'POST', body: form, mode:'no-cors'})
+  // URLSearchParams = seule methode fiable avec Google Apps Script
+  // FormData + no-cors rend les donnees illisibles cote script
+  var params = new URLSearchParams();
+  params.append('data', JSON.stringify(p));
+
+  fetch(SCRIPT_URL, {method:'POST', body: params})
     .then(function(){
-      // Afficher ecran de confirmation puis reset automatique
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
       showConfirmation();
     })
     .catch(function(){
-      st.className='expst err';
-      st.innerHTML='<i class="ti ti-wifi-off"></i> Verifiez votre connexion internet.';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
+      toast('Erreur lors de l\'envoi du rapport.');
     });
 }
 
+
+// ── CONFIRMATION ──────────────────────────────────────────────────────────────
 function showConfirmation(){
-  // Masquer tous les ecrans et navbars
   document.getElementById('scr1').className = 'scr';
   document.getElementById('scr2').className = 'scr';
   document.getElementById('scr3').className = 'scr';
@@ -797,15 +867,12 @@ function showConfirmation(){
   document.getElementById('nav1').className = 'navbar';
   document.getElementById('nav2').className = 'navbar';
   document.getElementById('nav3').className = 'navbar';
-  // Afficher ecran de confirmation
   document.getElementById('scr_confirm').className = 'scr on';
   window.scrollTo(0,0);
-  // Lancer la barre de progression
   setTimeout(function(){
     var bar = document.getElementById('confirm_bar');
     if(bar) bar.style.width = '100%';
   }, 50);
-  // Reset automatique apres 4 secondes
   setTimeout(function(){
     doReset(true);
   }, 4000);
@@ -825,6 +892,12 @@ function doReset(skipConfirm){
   document.getElementById('plq_display').textContent = '-- -- --';
   document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
   document.getElementById('exp_status').textContent = '';
+  // [CORRECTION 7] Reinitialiser l'etat du bouton export
+  var btn = document.getElementById('btn_export');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
+  // [CORRECTION 1] Effacer les surlignages d'erreur eventuels
+  resetFieldErrors();
   showScr(1);
   toast('Nouvel audit demarre');
 }
@@ -837,21 +910,180 @@ function toast(msg){
   setTimeout(function(){ el.className = 'toast'; }, 2800);
 }
 
+// ── UTILITAIRE : effacer les erreurs de validation ────────────────────────────
+var REQUIRED_FIELDS = ['inp_prenom','inp_date','inp_marque','inp_modele','inp_plaque','inp_km'];
+function resetFieldErrors(){
+  REQUIRED_FIELDS.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.style.borderColor = ''; el.style.background = ''; }
+  });
+}
+
+// ── VALIDATION ECRAN 1 → 2 ────────────────────────────────────────────────────
+function validateScr1(){
+  resetFieldErrors();
+
+  var missing  = [];
+  var firstEl  = null;
+
+  function check(id, label, overrideVal){
+    var el  = document.getElementById(id);
+    var val = (overrideVal !== undefined) ? String(overrideVal) : (el ? el.value.trim() : '');
+    if(!val){
+      if(el){ el.style.borderColor='var(--crb)'; el.style.background='var(--crbg)'; }
+      missing.push(label);
+      if(!firstEl && el) firstEl = el;
+    } else {
+      if(el){ el.style.borderColor=''; el.style.background=''; }
+    }
+  }
+
+  check('inp_prenom', 'Prenom');
+  check('inp_date',   'Date');
+  check('inp_marque', 'Marque');
+  check('inp_modele', 'Modele');
+  check('inp_plaque', 'Plaque', getPlaque());
+  check('inp_km',     'Kilometrage');
+
+  // Effacement auto des erreurs a la saisie (compatible tous navigateurs)
+  REQUIRED_FIELDS.forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(el._clr){ el.removeEventListener('input', el._clr); el.removeEventListener('change', el._clr); }
+    el._clr = function(){ el.style.borderColor=''; el.style.background=''; };
+    el.addEventListener('input',  el._clr);
+    el.addEventListener('change', el._clr);
+  });
+
+  if(missing.length > 0){
+    toast(missing.length === 1 ? 'Manquant : ' + missing[0] : 'Manquants : ' + missing.join(', '));
+    if(firstEl) firstEl.scrollIntoView({behavior:'smooth', block:'center'});
+    return false;
+  }
+  return true;
+}
+
+// ── [CORRECTION 1] VALIDATION ECRAN 2 → 3 ────────────────────────────────────
+// Verifie que tous les items de controle ont un rating.
+function validateScr2(){
+  var unrated = Object.keys(STATE).filter(function(k){ return !STATE[k].rating; });
+  if(unrated.length > 0){
+    toast('Tous les contr\u00f4les doivent \u00eatre \u00e9valu\u00e9s (' + unrated.length + ' restant(s)).');
+    return false;
+  }
+  return true;
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
 buildControls();
 
-// Attacher les evenements APRES que tout le DOM est pret
-document.getElementById('btn_goto2').addEventListener('click', function(){ showScr(2); });
-document.getElementById('btn_back1').addEventListener('click', function(){ showScr(1); });
+// Evenements de navigation avec validations
+// [CORRECTION 1] Ecran 1 → 2 : validation des champs obligatoires
+document.getElementById('btn_goto2').addEventListener('click', function(){
+  if(validateScr1()) showScr(2);
+});
+document.getElementById('btn_back1').addEventListener('click',  function(){ showScr(1); });
 document.getElementById('btn_back1b').addEventListener('click', function(){ showScr(1); });
-document.getElementById('btn_goto3').addEventListener('click', function(){ showScr(3); });
-document.getElementById('btn_back2').addEventListener('click', function(){ showScr(2); });
+
+// [CORRECTION 1] Ecran 2 → 3 : validation que tous les items sont evalues
+document.getElementById('btn_goto3').addEventListener('click', function(){
+  if(validateScr2()) showScr(3);
+});
+document.getElementById('btn_back2').addEventListener('click',  function(){ showScr(2); });
 document.getElementById('btn_back2b').addEventListener('click', function(){ showScr(2); });
+
+// Ecran 3 → 4 : pas de validation requise
 document.getElementById('btn_goto4').addEventListener('click', function(){ showScr(4); });
-document.getElementById('btn_back3').addEventListener('click', function(){ showScr(3); });
+document.getElementById('btn_back3').addEventListener('click',  function(){ showScr(3); });
+
+// [CORRECTIONS 5/6/7] Bouton d'export unifie
 document.getElementById('btn_export').addEventListener('click', doExport);
-document.getElementById('btn_reset').addEventListener('click', doReset);
+document.getElementById('btn_reset').addEventListener('click',  doReset);
+
+/*
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  [CORRECTION 6] NOUVEAU SCRIPT GOOGLE APPS SCRIPT                      ║
+  ║  Remplace l'ancien. Gere l'upload des photos vers Google Drive          ║
+  ║  et ecrit les URLs dans Google Sheets.                                  ║
+  ║                                                                          ║
+  ║  INSTALLATION :                                                          ║
+  ║  1. Ouvrir votre Google Sheet                                            ║
+  ║  2. Extensions > Apps Script                                             ║
+  ║  3. Coller le code ci-dessous (remplacer tout le contenu existant)       ║
+  ║  4. Deployer > Nouvelle App Web                                          ║
+  ║     - Executer en tant que : Moi                                         ║
+  ║     - Qui peut acceder : Tout le monde                                   ║
+  ║  5. Copier l'URL de deploiement dans la variable SCRIPT_URL ci-dessus   ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+
+  function doPost(e) {
+    var data   = JSON.parse(e.postData.contents);
+    var ss     = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet  = ss.getSheetByName('Audits') || ss.insertSheet('Audits');
+
+    // Creer (ou recuperer) le dossier de photos sur Drive
+    var folder;
+    try {
+      var it = DriveApp.getFoldersByName('Audits_Photos');
+      folder = it.hasNext() ? it.next() : DriveApp.createFolder('Audits_Photos');
+    } catch(err) {
+      folder = DriveApp.getRootFolder();
+    }
+
+    // En-tetes si la feuille est vide
+    if(sheet.getLastRow() === 0){
+      sheet.appendRow([
+        'Prenom','Date','Marque','Modele','Plaque','Km',
+        'Vehicule','Categorie','Item','Note','Observation','Photos','Commentaire_General'
+      ]);
+    }
+
+    var prenom  = data.Prenom      || '';
+    var date    = data.Date        || '';
+    var marque  = data.Marque      || '';
+    var modele  = data.Modele      || '';
+    var plaque  = data.Plaque      || '';
+    var km      = data.Km          || '';
+    var comment = data.Commentaire || '';
+
+    // Parcourir chaque item de controle
+    (data.items || []).forEach(function(item) {
+      var photoUrls = [];
+
+      // Uploader chaque photo base64 vers Drive
+      (item.photos || []).forEach(function(b64, i) {
+        try {
+          var raw  = b64.indexOf(',') > -1 ? b64.split(',')[1] : b64;
+          var blob = Utilities.newBlob(
+            Utilities.base64Decode(raw),
+            'image/jpeg',
+            plaque + '_' + item.item.replace(/[^a-zA-Z0-9]/g,'_') + '_' + (i+1) + '.jpg'
+          );
+          var file = folder.createFile(blob);
+          // Rendre le fichier accessible via lien
+          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          photoUrls.push(file.getDownloadUrl());
+        } catch(err) {
+          photoUrls.push('Erreur_upload: ' + err.message);
+        }
+      });
+
+      // Ecrire la ligne dans le Sheet
+      sheet.appendRow([
+        prenom, date, marque, modele, plaque, km,
+        item.vehicule, item.categorie, item.item,
+        item.note, item.commentaire,
+        photoUrls.join(' | '),
+        comment
+      ]);
+    });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({status: 'ok'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+*/
 </script>
 </body>
 </html>
