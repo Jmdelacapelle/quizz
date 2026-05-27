@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Audit Vehicule</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0EEE9;--surf:#fff;--surf2:#F7F6F2;--surf3:#ECEAE4;
+  --brd:#C0BDB3;--txt:#1E1D1A;--txt2:#5A5852;--txt3:#9A9690;
+  --ok:#2D6A0F;--okbg:#DFF2D0;--okm:#6DBF3E;--okb:#4F9E2A;
+  --mo:#7A4800;--mobg:#FDEBD0;--mom:#F0A030;--mob:#D4841A;
+  --af:#0D4F8C;--afbg:#D6EAF8;--afm:#2E8FD4;--afb:#1A72B0;
+  --cr:#8B1A1A;--crbg:#FADBD8;--crm:#DC3535;--crb:#B52A2A;
+  --acc:#1A56A0;
+  --r:14px;--rs:8px;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{background:var(--bg);font-family:var(--font);color:var(--txt);-webkit-font-smoothing:antialiased;min-height:100%}
+.app{max-width:500px;margin:0 auto;background:var(--bg);min-height:100vh}
+
+/* SCREENS */
+.scr{display:none;min-height:100vh;padding-bottom:80px}
+.scr.on{display:block}
+
+/* HEADER */
+.hdr{background:var(--acc);padding:13px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.hico{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;flex-shrink:0}
+.htit{font-size:16px;font-weight:700;color:#fff;flex:1}
+.hsub{font-size:11px;color:rgba(255,255,255,.65)}
+.hstep{font-size:12px;color:rgba(255,255,255,.85);background:rgba(255,255,255,.18);padding:4px 10px;border-radius:20px;font-weight:600;white-space:nowrap}
+.bbtn{background:rgba(255,255,255,.18);border:none;cursor:pointer;color:#fff;font-size:18px;padding:7px 9px;border-radius:9px;display:flex;align-items:center;flex-shrink:0}
+
+/* PROGRESS */
+.pgwrap{height:5px;background:rgba(0,0,0,.08)}
+.pgfill{height:5px;background:linear-gradient(90deg,#4FC3F7,#29B6F6);transition:width .4s}
+
+/* NAV BAR - fixed bottom */
+.navbar{position:fixed;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;background:var(--surf);border-top:2px solid var(--brd);padding:11px 14px;display:none;gap:8px;z-index:50;box-shadow:0 -2px 14px rgba(0,0,0,.1)}
+.navbar.on{display:flex}
+.btnp{flex:1;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px}
+.btnp:active{opacity:.85}
+.btns{padding:13px 14px;background:var(--surf2);color:var(--txt2);border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px}
+
+/* SECTIONS */
+.sec{padding:16px 14px 0}
+.sectit{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--txt3);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* CARDS */
+.card{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+
+/* FIELDS */
+.fld{margin-bottom:15px}
+.fld:last-child{margin-bottom:0}
+.fld label{font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:6px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.fld label i{font-size:13px;color:var(--acc)}
+.fld input,.fld select,.fld textarea{width:100%;padding:11px 14px;border:2px solid var(--brd);border-radius:var(--rs);font-size:15px;background:var(--surf2);color:var(--txt);font-family:var(--font);-webkit-appearance:none;appearance:none;outline:none;transition:border-color .2s,background .2s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--acc);background:#fff}
+.fld textarea{resize:none;min-height:110px;line-height:1.6}
+.fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A5852' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-color:var(--surf2);padding-right:38px}
+
+/* PLAQUE */
+.plqprev{margin-top:10px;display:flex;align-items:center;gap:12px}
+.plqbox{background:#1A3A6B;color:#fff;font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.2em;padding:9px 18px;border-radius:7px;min-width:140px;min-height:42px;display:flex;align-items:center;justify-content:center;border:2px solid #0D2847}
+.plqhint{font-size:11px;color:var(--txt3)}
+
+/* WELCOME CARD */
+.welc{background:linear-gradient(135deg,#1A56A0,#0D3575);border-radius:var(--r);padding:20px;margin:14px 14px 0;border:2px solid #0D2847}
+.welctit{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.welcsub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:14px}
+.welcchips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;display:flex;align-items:center;gap:5px;border:1.5px solid rgba(255,255,255,.2)}
+
+/* ═══════════════════════════════════════════════════════════
+   [CORRECTION 2] CAT NAV - sticky fixe sous le header
+   Header height = padding(13px*2) + icon(36px) = 62px => top:62px
+   ═══════════════════════════════════════════════════════════ */
+.catnav{
+  display:flex;overflow-x:auto;gap:7px;
+  padding:10px 14px;
+  scrollbar-width:none;
+  position:sticky;          /* Sticky sous le header */
+  top:62px;                 /* = hauteur exacte du header */
+  z-index:48;               /* Sous le header (z-index:50) */
+  background:var(--bg);     /* Fond opaque pour masquer le contenu qui defile */
+  border-bottom:1.5px solid var(--brd);
+}
+.catnav::-webkit-scrollbar{display:none}
+.catbtn{white-space:nowrap;padding:8px 13px;border-radius:22px;font-size:12px;font-weight:600;border:2px solid var(--brd);background:var(--surf);color:var(--txt2);cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;font-family:var(--font)}
+.catbtn i{font-size:13px}
+.catbtn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.catbtn.warn{border-color:var(--crb);color:var(--cr);background:var(--crbg)}
+.catbtn.good{border-color:var(--okb);color:var(--ok);background:var(--okbg)}
+.cbadge{background:rgba(255,255,255,.25);border-radius:10px;padding:1px 7px;font-size:10px}
+.warn .cbadge{background:var(--crb);color:#fff}
+.good .cbadge{background:var(--okb);color:#fff}
+
+/* CAT SECTION */
+.catsec{display:none;padding:12px 14px}
+.catsec.on{display:block}
+.catshdr{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.catshico{width:38px;height:38px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;flex-shrink:0}
+.catsname{font-size:15px;font-weight:700}
+.catscnt{font-size:12px;color:var(--txt3)}
+
+/* CONTROL ITEM */
+.citm{background:var(--surf);border:2.5px solid var(--brd);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.citm.rok{border-color:var(--okb)}
+.citm.rmo{border-color:var(--mob)}
+.citm.raf{border-color:var(--afb)}
+.citm.rcr{border-color:var(--crb)}
+.citop{padding:12px 14px 0;display:flex;align-items:center;gap:8px}
+.cilbl{font-size:14px;font-weight:600;color:var(--txt);flex:1}
+.cipill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:12px;border:1.5px solid;display:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+
+/* GAUGE */
+.gauwrap{padding:10px 14px 0}
+.gaulbls{display:flex;justify-content:space-between;margin-bottom:5px}
+.gaul{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.gaul.ok{color:var(--ok)}.gaul.mo{color:var(--mo)}.gaul.af{color:var(--af)}.gaul.cr{color:var(--cr)}
+.gautrack{height:10px;border-radius:7px;background:var(--surf3);border:2px solid var(--brd);display:flex;overflow:hidden;cursor:pointer}
+.gauseg{flex:1;transition:background .15s}
+.gauseg+.gauseg{border-left:2px solid var(--surf)}
+.gauseg.aok{background:var(--okm)}.gauseg.amo{background:var(--mom)}.gauseg.aaf{background:var(--afm)}.gauseg.acr{background:var(--crm)}
+
+/* RATING BUTTONS */
+.ratrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 14px 0}
+.rbtn{padding:9px 2px;border-radius:var(--rs);font-size:11px;font-weight:700;border:2px solid;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:3px;flex-direction:column;line-height:1.1}
+.rbtn i{font-size:15px}
+.rbtn:active{transform:scale(.93)}
+.rbtn.ok{color:var(--ok);border-color:var(--okb);background:var(--okbg)}
+.rbtn.mo{color:var(--mo);border-color:var(--mob);background:var(--mobg)}
+.rbtn.af{color:var(--af);border-color:var(--afb);background:var(--afbg)}
+.rbtn.cr{color:var(--cr);border-color:var(--crb);background:var(--crbg)}
+.rbtn.sel.ok{background:var(--okm);color:#fff;border-color:var(--ok)}
+.rbtn.sel.mo{background:var(--mom);color:#fff;border-color:var(--mo)}
+.rbtn.sel.af{background:var(--afm);color:#fff;border-color:var(--af)}
+.rbtn.sel.cr{background:var(--crm);color:#fff;border-color:var(--cr)}
+
+/* ACTIONS */
+.acts{display:flex;gap:8px;padding:10px 14px 14px}
+.abtn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:22px;font-size:12px;font-weight:600;border:2px solid var(--brd);background:var(--surf2);color:var(--txt2);cursor:pointer;font-family:var(--font)}
+.abtn i{font-size:15px}
+.abtn.on{border-color:var(--acc);color:var(--acc);background:var(--afbg)}
+.notefld{display:none;padding:0 14px 10px}
+.notefld.on{display:block}
+.notefld input{width:100%;padding:9px 12px;border:2px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--surf2);color:var(--txt);font-family:var(--font);outline:none}
+.notefld input:focus{border-color:var(--acc);background:#fff}
+.photofld{display:none;padding:0 14px 12px}
+.photofld.on{display:block}
+.photolbl{display:flex;align-items:center;justify-content:center;gap:9px;border:2px dashed var(--brd);border-radius:var(--rs);padding:14px;cursor:pointer;background:var(--surf2);font-size:13px;font-weight:600;color:var(--txt2)}
+.photolbl i{font-size:22px}
+.photoinp{display:none}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.twrap{position:relative}
+.thumb{width:70px;height:70px;border-radius:var(--rs);object-fit:cover;border:2px solid var(--brd)}
+.tdel{position:absolute;top:-7px;right:-7px;width:22px;height:22px;background:var(--cr);color:#fff;border:none;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+/* SUMMARY */
+.vhero{background:linear-gradient(135deg,#1A56A0,#0D3575);border-radius:var(--r);padding:18px;margin-bottom:14px;border:2px solid #0D2847}
+.vhtop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.vhico{width:50px;height:50px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:27px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.2)}
+.vhname{font-size:20px;font-weight:800;color:#fff;line-height:1.2}
+.vhsub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
+.vhplq{font-family:var(--mono);font-size:17px;font-weight:700;background:#0D2847;color:#fff;padding:8px 16px;border-radius:7px;letter-spacing:.15em;border:2px solid rgba(255,255,255,.2);display:inline-block}
+.vhdetrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.vhinfos{display:flex;flex-direction:column;gap:5px}
+.vhinfo{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
+.vhinfo i{font-size:13px}
+.commentblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.commenthdr{padding:10px 14px;background:var(--surf2);border-bottom:2px solid var(--brd);font-size:12px;font-weight:700;color:var(--txt2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.06em}
+.commenthdr i{font-size:15px;color:var(--acc)}
+.commenttxt{padding:12px 14px;font-size:14px;color:var(--txt);line-height:1.6;white-space:pre-wrap}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1.5px solid var(--surf3);font-size:13px}
+.drow:last-child{border-bottom:none}
+.dlbl{color:var(--txt2);display:flex;align-items:center;gap:6px}
+.dlbl i{font-size:14px;color:var(--acc)}
+.dval{font-weight:700}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{padding:16px;border-radius:var(--r);text-align:center;border:2px solid}
+.stat .sn{font-size:30px;font-weight:800;line-height:1}
+.stat .sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.stat .si{font-size:22px;margin-bottom:4px}
+.stat.ok{background:var(--okbg);color:var(--ok);border-color:var(--okb)}
+.stat.mo{background:var(--mobg);color:var(--mo);border-color:var(--mob)}
+.stat.af{background:var(--afbg);color:var(--af);border-color:var(--afb)}
+.stat.cr{background:var(--crbg);color:var(--cr);border-color:var(--crb)}
+.iblk{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.ibhdr{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid rgba(0,0,0,.06)}
+.ibhdr i{font-size:18px}
+.ibhtit{font-size:14px;font-weight:700}
+.irow{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1.5px solid var(--surf3);gap:8px}
+.irow:last-child{border-bottom:none}
+.iname{font-size:13px;font-weight:600}
+.icat{font-size:11px;color:var(--txt3);margin-top:1px}
+.inote{font-size:11px;color:var(--txt3);font-style:italic;margin-top:2px}
+.ibadge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;border:1.5px solid;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.ibadge.cr{color:var(--cr);background:var(--crbg);border-color:var(--crb)}
+.ibadge.af{color:var(--af);background:var(--afbg);border-color:var(--afb)}
+.ibadge.mo{color:var(--mo);background:var(--mobg);border-color:var(--mob)}
+
+/* EXPORT - [CORRECTION 5] Interface propre, suppression des elements techniques */
+.expcard{background:var(--surf);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.btnexp{width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.btnexp:disabled{opacity:.55;cursor:not-allowed}
+.expst{font-size:13px;color:var(--txt2);padding:5px 0;min-height:28px;display:flex;align-items:center;gap:6px;font-weight:500}
+.expst.ok{color:var(--ok)}.expst.err{color:var(--cr)}
+.btnreset{padding:13px 16px;background:transparent;color:var(--cr);border:2px solid var(--crb);border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px;width:100%;justify-content:center;margin-top:8px}
+.btnreset:hover{background:var(--crbg)}
+.chint{font-size:12px;color:var(--txt3);margin-bottom:12px;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+.chint i{font-size:15px;color:var(--acc);margin-top:1px;flex-shrink:0}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);background:#1E1D1A;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* [CORRECTION 7] Animation spinner pour le loader d'envoi */
+@keyframes spin { to { transform:rotate(360deg); } }
+.spin-icon{display:inline-block;animation:spin .9s linear infinite;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ECRAN 1 -->
+<div class="scr on" id="scr1">
+  <div class="pgwrap"><div class="pgfill" style="width:25%"></div></div>
+  <div class="hdr">
+    <div class="hico"><i class="ti ti-car" aria-hidden="true"></i></div>
+    <div style="flex:1"><div class="htit">Audit Vehicule</div><div class="hsub">Controle mensuel</div></div>
+    <span class="hstep">1 / 4</span>
+  </div>
+  <div class="welc">
+    <div class="welctit">Nouveau controle</div>
+    <div class="welcsub">Renseignez les informations du vehicule</div>
+    <div class="welcchips">
+      <div class="chip"><i class="ti ti-list-check"></i>26 points</div>
+      <div class="chip"><i class="ti ti-table-export"></i>Export Sheets</div>
+      <div class="chip"><i class="ti ti-camera"></i>Photos</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-user"></i>Controleur</div>
+    <div class="card">
+      <div class="fld"><label><i class="ti ti-id-badge"></i>Prenom</label><input type="text" id="inp_prenom" placeholder="ex. Jean-Pierre"></div>
+      <div class="fld"><label><i class="ti ti-calendar"></i>Date du controle</label><input type="date" id="inp_date"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-car"></i>Vehicule</div>
+    <div class="card">
+      <div class="fld"><label><i class="ti ti-building-factory"></i>Marque</label>
+        <select id="inp_marque">
+          <option value="">-- Selectionnez --</option>
+          <option>Peugeot</option><option>Renault</option><option>Mercedes</option><option>Hyundai</option><option>Autre</option>
+        </select>
+      </div>
+      <div class="fld"><label><i class="ti ti-tag"></i>Modele</label><input type="text" id="inp_modele" placeholder="ex. 308 SW, Clio V, Vito..."></div>
+      <div class="fld">
+        <label><i class="ti ti-license"></i>Plaque d'immatriculation</label>
+        <input type="text" id="inp_plaque" placeholder="AB 123 CD" maxlength="10" autocomplete="off" spellcheck="false" autocapitalize="characters" style="letter-spacing:.08em;font-family:var(--mono);font-size:16px;font-weight:600">
+        <div class="plqprev">
+          <div class="plqbox" id="plq_display">-- -- --</div>
+          <span class="plqhint">Apercu formate</span>
+        </div>
+      </div>
+      <div class="fld"><label><i class="ti ti-road"></i>Kilometrage (km)</label><input type="number" id="inp_km" placeholder="ex. 45000" min="0"></div>
+    </div>
+  </div>
+  <div class="navbar on" id="nav1">
+    <button class="btnp" id="btn_goto2"><i class="ti ti-chevron-right"></i>Commencer les controles</button>
+  </div>
+</div>
+
+<!-- ECRAN 2 -->
+<div class="scr" id="scr2">
+  <div class="pgwrap"><div class="pgfill" style="width:58%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back1"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Controles visuels</div><div class="hsub" id="prog_lbl">0 / 26 evalues</div></div>
+    <span class="hstep">2 / 4</span>
+  </div>
+  <!-- [CORRECTION 2] catnav - position sticky geree par le CSS (top:62px) -->
+  <div class="catnav" id="catnav"></div>
+  <div id="ctrl_cont"></div>
+  <div class="navbar" id="nav2">
+    <button class="btns" id="btn_back1b"><i class="ti ti-arrow-left"></i></button>
+    <button class="btnp" id="btn_goto3"><i class="ti ti-message"></i>Commentaire<i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<!-- ECRAN 3 -->
+<div class="scr" id="scr3">
+  <div class="pgwrap"><div class="pgfill" style="width:82%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back2"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Commentaire global</div><div class="hsub">Observations generales</div></div>
+    <span class="hstep">3 / 4</span>
+  </div>
+  <div class="sec">
+    <div class="sectit"><i class="ti ti-notes"></i>Observations</div>
+    <div class="card">
+      <p class="chint"><i class="ti ti-info-circle"></i>Contexte, points a surveiller, echeances, remarques supplementaires...</p>
+      <div class="fld"><label><i class="ti ti-pencil"></i>Commentaire libre</label>
+        <textarea id="inp_comment" placeholder="Ex : Vehicule principalement en ville. Changement pneus prevu..."></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="navbar" id="nav3">
+    <button class="btns" id="btn_back2b"><i class="ti ti-arrow-left"></i></button>
+    <button class="btnp" id="btn_goto4"><i class="ti ti-clipboard-list"></i>Recapitulatif<i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<!-- ECRAN 4 -->
+<div class="scr" id="scr4">
+  <div class="pgwrap"><div class="pgfill" style="width:100%"></div></div>
+  <div class="hdr">
+    <button class="bbtn" id="btn_back3"><i class="ti ti-arrow-left"></i></button>
+    <div style="flex:1"><div class="htit">Recapitulatif</div><div class="hsub">Synthese de l'audit</div></div>
+    <span class="hstep">4 / 4</span>
+  </div>
+  <div class="sec"><div class="sectit"><i class="ti ti-car"></i>Vehicule</div><div id="sum_veh"></div></div>
+  <div class="sec"><div class="sectit"><i class="ti ti-chart-bar"></i>Resultats</div><div class="statgrid" id="sum_stats"></div></div>
+  <div class="sec"><div id="sum_issues"></div></div>
+  <div class="sec" style="padding-bottom:100px">
+    <div class="sectit"><i class="ti ti-upload"></i>Export Google Sheets</div>
+    <!-- [CORRECTION 5] Interface propre : URL cachee dans le code JS (SCRIPT_URL)
+         Supprime : champ URL visible, label, details, scriptbox, texte technique -->
+    <div class="expcard">
+      <button class="btnexp" id="btn_export">
+        <i class="ti ti-table-export"></i>Envoyer le rapport
+      </button>
+      <div class="expst" id="exp_status"></div>
+    </div>
+    <button class="btnreset" id="btn_reset"><i class="ti ti-refresh"></i>Nouvel audit</button>
+  </div>
+</div>
+
+<!-- ECRAN CONFIRMATION -->
+<div class="scr" id="scr_confirm">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;background:var(--bg)">
+    <div style="width:90px;height:90px;background:var(--okbg);border:3px solid var(--okb);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+      <i class="ti ti-circle-check" style="font-size:48px;color:var(--ok)"></i>
+    </div>
+    <div style="font-size:24px;font-weight:800;color:var(--ok);margin-bottom:10px">Audit envoye !</div>
+    <div style="font-size:15px;color:var(--txt2);margin-bottom:6px;line-height:1.5">Les donnees ont bien ete<br>enregistrees dans Google Sheets.</div>
+    <div style="font-size:13px;color:var(--txt3);margin-top:20px">Retour automatique dans quelques secondes...</div>
+    <div style="margin-top:30px;width:200px;height:5px;background:var(--surf3);border-radius:5px;overflow:hidden">
+      <div id="confirm_bar" style="height:5px;background:var(--ok);border-radius:5px;width:0%;transition:width 4s linear"></div>
+    </div>
+    <button onclick="doReset()" style="margin-top:30px;padding:13px 28px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px">
+      <i class="ti ti-plus" aria-hidden="true"></i>Nouvel audit maintenant
+    </button>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast_el"></div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var CATS = [
+  {id:'freins',  label:'Freins',      icon:'ti-settings',    items:['Plaquettes avant','Plaquettes arriere','Disques avant','Disques arriere','Liquide de frein']},
+  {id:'niveaux', label:'Niveaux',     icon:'ti-droplet',     items:['Liquide refroidissement','Liquide lave-glace','Niveau huile','Aspect huile moteur']},
+  {id:'pneus',   label:'Pneus',       icon:'ti-circle-dashed',items:['Usure pneus avant','Usure pneus arriere','Pression des pneus']},
+  {id:'eclaire', label:'Eclairage',   icon:'ti-bulb',        items:['Feux de croisement','Feux de route','Feux stop','Clignotants','Eclairage plaque','Feux de recul','Warning']},
+  {id:'carros',  label:'Carrosserie', icon:'ti-car',         items:['Etat pare-brise','Essuie-glace avant','Essuie-glace arriere','Etat carrosserie']},
+  {id:'secu',    label:'Securite',    icon:'ti-shield-check',items:['Carte grise','Triangle signalisation','Gilet fluorescent']}
+];
+
+var RATS = [
+  {k:'ok', l:'OK',       cls:'ok', ic:'ti-circle-check',    gcls:'aok'},
+  {k:'mo', l:'Moyen',    cls:'mo', ic:'ti-alert-circle',    gcls:'amo'},
+  {k:'af', l:'A faire',  cls:'af', ic:'ti-tool',            gcls:'aaf'},
+  {k:'cr', l:'Critique', cls:'cr', ic:'ti-alert-triangle',  gcls:'acr'}
+];
+
+var CATMAP = {};
+CATS.forEach(function(c){ c.items.forEach(function(it){ CATMAP[it] = c.label; }); });
+
+var STATE = {};
+function initState(){
+  STATE = {};
+  CATS.forEach(function(c){
+    c.items.forEach(function(it){
+      STATE[it] = {rating:null, note:'', photos:[]};
+    });
+  });
+}
+initState();
+
+// ── [CORRECTION 5] URL Apps Script cachee dans le code ────────────────────────
+// Remplacer par l'URL de votre propre deploiement Apps Script
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8oQzOQkBL4BCtHoVuF_HcO4QHE2A_Xk_FMPNuyn717PIqy2i-OhlFESEOofHZ1lPmlA/exec';
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+// [CORRECTION 4] showScr() ne reinitialise jamais STATE.
+// buildControls() n'est appele qu'une fois (init) et a chaque doReset().
+// Toutes les donnees (ratings, notes, photos) sont donc preservees
+// pendant toute la session de navigation entre les ecrans.
+function showScr(n){
+  document.getElementById('scr1').className = 'scr' + (n===1?' on':'');
+  document.getElementById('scr2').className = 'scr' + (n===2?' on':'');
+  document.getElementById('scr3').className = 'scr' + (n===3?' on':'');
+  document.getElementById('scr4').className = 'scr' + (n===4?' on':'');
+  document.getElementById('nav1').className = 'navbar' + (n===1?' on':'');
+  document.getElementById('nav2').className = 'navbar' + (n===2?' on':'');
+  document.getElementById('nav3').className = 'navbar' + (n===3?' on':'');
+  window.scrollTo(0,0);
+  if(n===4) buildSummary();
+}
+
+// ── PLAQUE ────────────────────────────────────────────────────────────────────
+var _plaqueLock = false;
+document.getElementById('inp_plaque').addEventListener('input', function(){
+  if(_plaqueLock) return;
+  _plaqueLock = true;
+  var raw = this.value.toUpperCase();
+  var clean = '';
+  for(var i=0; i<raw.length; i++){
+    var c = raw.charCodeAt(i);
+    if((c>=65&&c<=90)||(c>=48&&c<=57)) clean += raw[i];
+  }
+  var l1='', nums='', l2='', p=0;
+  while(p<clean.length && clean.charCodeAt(p)>=65 && clean.charCodeAt(p)<=90 && l1.length<2){ l1+=clean[p]; p++; }
+  while(p<clean.length && clean.charCodeAt(p)>=48 && clean.charCodeAt(p)<=57 && nums.length<3){ nums+=clean[p]; p++; }
+  while(p<clean.length && clean.charCodeAt(p)>=65 && clean.charCodeAt(p)<=90 && l2.length<2){ l2+=clean[p]; p++; }
+  var formatted = l1;
+  if(nums) formatted += ' ' + nums;
+  if(l2)   formatted += ' ' + l2;
+  this.value = formatted;
+  document.getElementById('plq_display').textContent = formatted || '-- -- --';
+  _plaqueLock = false;
+});
+
+function getPlaque(){
+  var t = document.getElementById('plq_display').textContent;
+  return (t === '-- -- --') ? '' : t;
+}
+
+// ── [CORRECTION 3] COMPRESSION IMAGE AVANT STOCKAGE ──────────────────────────
+// Redimensionne a max 1280px et compresse en JPEG 0.7 via canvas.
+// Evite les crash memoire sur mobile avec les photos haute resolution.
+function compressImage(file, callback){
+  var MAX_SIZE = 1280;  // pixels max (largeur ou hauteur)
+  var QUALITY  = 0.7;   // qualite JPEG (0 a 1)
+
+  var img = new Image();
+  var objectUrl = URL.createObjectURL(file);
+
+  img.onload = function(){
+    URL.revokeObjectURL(objectUrl); // Liberer la memoire immediatement
+
+    var w = img.naturalWidth;
+    var h = img.naturalHeight;
+
+    // Calculer les nouvelles dimensions en conservant le ratio
+    if(w > MAX_SIZE || h > MAX_SIZE){
+      if(w >= h){ h = Math.round(h * MAX_SIZE / w); w = MAX_SIZE; }
+      else       { w = Math.round(w * MAX_SIZE / h); h = MAX_SIZE; }
+    }
+
+    // Dessiner l'image redimensionnee sur un canvas
+    var canvas = document.createElement('canvas');
+    canvas.width  = w;
+    canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+    // Exporter en JPEG compresse (base64)
+    callback(canvas.toDataURL('image/jpeg', QUALITY));
+  };
+
+  img.onerror = function(){
+    // Fallback : FileReader direct si le canvas echoue
+    URL.revokeObjectURL(objectUrl);
+    var reader = new FileReader();
+    reader.onload = function(e){ callback(e.target.result); };
+    reader.readAsDataURL(file);
+  };
+
+  img.src = objectUrl;
+}
+
+// ── BUILD CONTROLS ────────────────────────────────────────────────────────────
+function buildControls(){
+  var nav  = document.getElementById('catnav');
+  var cont = document.getElementById('ctrl_cont');
+  nav.innerHTML  = '';
+  cont.innerHTML = '';
+
+  CATS.forEach(function(cat, ci){
+    // Bouton de navigation de categorie
+    var btn = document.createElement('button');
+    btn.className = 'catbtn' + (ci===0 ? ' on' : '');
+    btn.setAttribute('data-cat', cat.id);
+    btn.innerHTML = '<i class="ti '+cat.icon+'" aria-hidden="true"></i>'
+      + cat.label
+      + '<span class="cbadge" id="cbadge_'+cat.id+'">0/'+cat.items.length+'</span>';
+    btn.addEventListener('click', function(){ switchCat(this.getAttribute('data-cat')); });
+    nav.appendChild(btn);
+
+    // Section de categorie
+    var sec = document.createElement('div');
+    sec.className = 'catsec' + (ci===0 ? ' on' : '');
+    sec.id = 'catsec_' + cat.id;
+
+    var hdr = document.createElement('div');
+    hdr.className = 'catshdr';
+    hdr.innerHTML = '<div class="catshico"><i class="ti '+cat.icon+'" aria-hidden="true"></i></div>'
+      + '<div><div class="catsname">'+cat.label+'</div>'
+      + '<div class="catscnt">'+cat.items.length+' points a controler</div></div>';
+    sec.appendChild(hdr);
+
+    // IMPORTANT : on ajoute sec au DOM AVANT d'attacher les evenements,
+    // sinon document.getElementById() retourne null sur les elements detaches
+    // et plante tout le JS, rendant tous les boutons morts.
+    cont.appendChild(sec);
+
+    cat.items.forEach(function(item){
+      var key = item.replace(/[^a-zA-Z0-9]/g, '_');
+      var div = document.createElement('div');
+      div.className = 'citm';
+      div.id = 'citm_' + key;
+
+      var rbtns = '';
+      RATS.forEach(function(r){
+        rbtns += '<button class="rbtn '+r.cls+'" id="rbtn_'+key+'_'+r.k+'">'
+          + '<i class="ti '+r.ic+'" aria-hidden="true"></i>'+r.l+'</button>';
+      });
+
+      div.innerHTML =
+        '<div class="citop">'
+          +'<span class="cilbl">'+item+'</span>'
+          +'<span class="cipill" id="pill_'+key+'"></span>'
+        +'</div>'
+        +'<div class="gauwrap">'
+          +'<div class="gaulbls">'
+            +'<span class="gaul ok">OK</span>'
+            +'<span class="gaul mo">Moyen</span>'
+            +'<span class="gaul af">A faire</span>'
+            +'<span class="gaul cr">Critique</span>'
+          +'</div>'
+          +'<div class="gautrack" id="gau_'+key+'">'
+            +'<div class="gauseg" data-item="'+item+'" data-r="ok"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="mo"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="af"></div>'
+            +'<div class="gauseg" data-item="'+item+'" data-r="cr"></div>'
+          +'</div>'
+        +'</div>'
+        +'<div class="ratrow">'+rbtns+'</div>'
+        +'<div class="acts">'
+          +'<button class="abtn" id="abtn_note_'+key+'"><i class="ti ti-pencil" aria-hidden="true"></i>Note</button>'
+          +'<button class="abtn" id="abtn_photo_'+key+'"><i class="ti ti-camera" aria-hidden="true"></i>Photo</button>'
+        +'</div>'
+        +'<div class="notefld" id="notefld_'+key+'"><input type="text" placeholder="Observation..." id="noteinp_'+key+'"></div>'
+        +'<div class="photofld" id="photofld_'+key+'">'
+          +'<label class="photolbl" for="photoinp_'+key+'"><i class="ti ti-camera-plus" aria-hidden="true"></i>Ajouter une photo</label>'
+          +'<input class="photoinp" type="file" id="photoinp_'+key+'" accept="image/*" capture="environment" multiple>'
+          +'<div class="thumbs" id="thumbs_'+key+'"></div>'
+        +'</div>';
+
+      sec.appendChild(div);
+
+      // Evenements pour cet item
+      (function(it, ky){
+        // Boutons de notation
+        RATS.forEach(function(r){
+          document.getElementById('rbtn_'+ky+'_'+r.k).addEventListener('click', function(){
+            applyRating(it, r.k);
+          });
+        });
+        // Segments de jauge
+        var segs = document.querySelectorAll('#gau_'+ky+' .gauseg');
+        segs.forEach(function(seg){
+          seg.addEventListener('click', function(){
+            applyRating(this.getAttribute('data-item'), this.getAttribute('data-r'));
+          });
+        });
+        // Toggle note
+        document.getElementById('abtn_note_'+ky).addEventListener('click', function(){
+          var fld = document.getElementById('notefld_'+ky);
+          fld.classList.toggle('on');
+          this.classList.toggle('on', fld.classList.contains('on'));
+          if(fld.classList.contains('on')) document.getElementById('noteinp_'+ky).focus();
+        });
+        // Saisie note -> sauvegarde dans STATE (persistance)
+        document.getElementById('noteinp_'+ky).addEventListener('input', function(){
+          STATE[it].note = this.value;
+        });
+        // Toggle photo
+        document.getElementById('abtn_photo_'+ky).addEventListener('click', function(){
+          var fld = document.getElementById('photofld_'+ky);
+          fld.classList.toggle('on');
+          this.classList.toggle('on', fld.classList.contains('on'));
+        });
+        // [CORRECTION 3] Photo : compression canvas avant stockage dans STATE
+        document.getElementById('photoinp_'+ky).addEventListener('change', function(){
+          var files = Array.prototype.slice.call(this.files);
+          var self  = this;
+          files.forEach(function(file){
+            compressImage(file, function(compressed){
+              // Image compressée stockee dans STATE (deja reduite pour la memoire)
+              STATE[it].photos.push(compressed);
+              renderThumbs(it, ky);
+            });
+          });
+          self.value = ''; // Reset pour permettre de re-selectionner le meme fichier
+        });
+      })(item, key);
+    });
+
+  });
+}
+
+function switchCat(catId){
+  document.querySelectorAll('.catbtn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-cat')===catId);
+  });
+  document.querySelectorAll('.catsec').forEach(function(s){
+    s.classList.toggle('on', s.id==='catsec_'+catId);
+  });
+  window.scrollTo(0, 0); // Scroll en haut (catnav sticky reste visible)
+}
+
+// ── RATING ────────────────────────────────────────────────────────────────────
+var PILLSTYLES = {
+  ok:  'color:var(--ok);background:var(--okbg);border-color:var(--okb)',
+  mo:  'color:var(--mo);background:var(--mobg);border-color:var(--mob)',
+  af:  'color:var(--af);background:var(--afbg);border-color:var(--afb)',
+  cr:  'color:var(--cr);background:var(--crbg);border-color:var(--crb)'
+};
+var PILLLABELS = {ok:'OK', mo:'Moyen', af:'A faire', cr:'Critique'};
+var ITEMCLS    = {ok:'rok', mo:'rmo', af:'raf', cr:'rcr'};
+var RATORDER   = ['ok','mo','af','cr'];
+
+function applyRating(item, rat){
+  STATE[item].rating = rat; // Stockage dans STATE (persistant)
+  var key = item.replace(/[^a-zA-Z0-9]/g,'_');
+
+  // Bordure de l'item
+  var citmEl = document.getElementById('citm_'+key);
+  citmEl.className = 'citm ' + ITEMCLS[rat];
+
+  // Boutons de notation
+  RATS.forEach(function(r){
+    var b = document.getElementById('rbtn_'+key+'_'+r.k);
+    if(b){ b.classList.toggle('sel', r.k===rat); }
+  });
+
+  // Jauge
+  var segs = document.querySelectorAll('#gau_'+key+' .gauseg');
+  var idx = RATORDER.indexOf(rat);
+  segs.forEach(function(seg, i){
+    seg.className = 'gauseg';
+    if(i<=idx){
+      RATS.forEach(function(r){ if(r.k===rat) seg.classList.add(r.gcls); });
+    }
+  });
+
+  // Pastille
+  var pill = document.getElementById('pill_'+key);
+  pill.textContent = PILLLABELS[rat];
+  pill.style.cssText = PILLSTYLES[rat];
+  pill.style.display = 'inline-block';
+
+  updateProgress();
+  updateCatBtns();
+}
+
+function updateProgress(){
+  var total = Object.keys(STATE).length;
+  var done  = 0;
+  Object.keys(STATE).forEach(function(k){ if(STATE[k].rating) done++; });
+  document.getElementById('prog_lbl').textContent = done + ' / ' + total + ' evalues';
+}
+
+function updateCatBtns(){
+  CATS.forEach(function(cat){
+    var ratings = cat.items.map(function(i){ return STATE[i].rating; });
+    var done    = ratings.filter(Boolean).length;
+    var btn     = document.querySelector('.catbtn[data-cat="'+cat.id+'"]');
+    var bdg     = document.getElementById('cbadge_'+cat.id);
+    if(bdg) bdg.textContent = done + '/' + cat.items.length;
+    btn.classList.remove('warn','good');
+    if(ratings.some(function(r){ return r==='cr'||r==='af'; })) btn.classList.add('warn');
+    else if(done===cat.items.length && ratings.every(function(r){ return r==='ok'||r==='mo'; })) btn.classList.add('good');
+  });
+}
+
+function renderThumbs(item, key){
+  var cont = document.getElementById('thumbs_'+key);
+  cont.innerHTML = '';
+  STATE[item].photos.forEach(function(src, idx){
+    var wrap = document.createElement('div');
+    wrap.className = 'twrap';
+    var img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = src;
+    var del = document.createElement('button');
+    del.className = 'tdel';
+    del.textContent = 'x';
+    (function(i){ del.addEventListener('click', function(){ STATE[item].photos.splice(i,1); renderThumbs(item, key); }); })(idx);
+    wrap.appendChild(img);
+    wrap.appendChild(del);
+    cont.appendChild(wrap);
+  });
+}
+
+// ── SUMMARY ──────────────────────────────────────────────────────────────────
+function buildSummary(){
+  var prenom  = document.getElementById('inp_prenom').value  || '';
+  var date    = document.getElementById('inp_date').value    || '';
+  var marque  = document.getElementById('inp_marque').value  || '';
+  var modele  = document.getElementById('inp_modele').value  || '';
+  var plaque  = getPlaque();
+  var km      = document.getElementById('inp_km').value      || '';
+  var comment = document.getElementById('inp_comment').value || '';
+
+  var kmTxt = km ? Number(km).toLocaleString('fr-FR') + ' km' : '---';
+  var vehHtml =
+    '<div class="vhero">'
+    + '<div class="vhtop">'
+    +   '<div class="vhico"><i class="ti ti-car" aria-hidden="true"></i></div>'
+    +   '<div>'
+    +     '<div class="vhname">' + (marque||'---') + ' ' + (modele||'') + '</div>'
+    +     '<div class="vhsub">Controle du ' + (date||'---') + ' par ' + (prenom||'---') + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="vhdetrow">'
+    +   '<div class="vhplq">' + (plaque||'-- -- --') + '</div>'
+    +   '<div class="vhinfos">'
+    +     '<div class="vhinfo"><i class="ti ti-road" aria-hidden="true"></i>' + kmTxt + '</div>'
+    +     '<div class="vhinfo"><i class="ti ti-user" aria-hidden="true"></i>' + (prenom||'---') + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  if(comment){
+    vehHtml +=
+      '<div class="commentblk">'
+      + '<div class="commenthdr"><i class="ti ti-message-2" aria-hidden="true"></i>Commentaire general</div>'
+      + '<div class="commenttxt">' + comment.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+      + '</div>';
+  }
+
+  document.getElementById('sum_veh').innerHTML = vehHtml;
+
+  var cnt = {ok:0,mo:0,af:0,cr:0};
+  Object.keys(STATE).forEach(function(k){ var r=STATE[k].rating; if(r) cnt[r]++; });
+
+  document.getElementById('sum_stats').innerHTML =
+      '<div class="stat ok"><div class="si"><i class="ti ti-circle-check"></i></div><div class="sn">' + cnt.ok + '</div><div class="sl">OK</div></div>'
+    + '<div class="stat mo"><div class="si"><i class="ti ti-alert-circle"></i></div><div class="sn">' + cnt.mo + '</div><div class="sl">Moyen</div></div>'
+    + '<div class="stat af"><div class="si"><i class="ti ti-tool"></i></div><div class="sn">' + cnt.af + '</div><div class="sl">A faire</div></div>'
+    + '<div class="stat cr"><div class="si"><i class="ti ti-alert-triangle"></i></div><div class="sn">' + cnt.cr + '</div><div class="sl">Critique</div></div>';
+
+  var entries = Object.keys(STATE).map(function(k){ return {item:k, data:STATE[k]}; });
+  var crits  = entries.filter(function(e){ return e.data.rating==='cr'; });
+  var afaire = entries.filter(function(e){ return e.data.rating==='af'; });
+  var moyen  = entries.filter(function(e){ return e.data.rating==='mo'; });
+
+  function mkBlock(title, icon, bgvar, txtvar, bclass, list, blbl){
+    if(!list.length) return '';
+    var rows = list.map(function(e){
+      return '<div class="irow">'
+        + '<div style="flex:1">'
+        +   '<div class="iname">' + e.item + '</div>'
+        +   '<div class="icat">' + (CATMAP[e.item]||'') + '</div>'
+        +   (e.data.note ? '<div class="inote">' + e.data.note + '</div>' : '')
+        + '</div>'
+        + '<span class="ibadge ' + bclass + '">' + blbl + '</span>'
+        + '</div>';
+    }).join('');
+    return '<div class="iblk">'
+      + '<div class="ibhdr" style="background:' + bgvar + '">'
+      +   '<i class="ti ' + icon + '" aria-hidden="true" style="color:' + txtvar + '"></i>'
+      +   '<span class="ibhtit" style="color:' + txtvar + '">' + title + ' <span style="font-weight:400;font-size:12px">(' + list.length + ')</span></span>'
+      + '</div>' + rows + '</div>';
+  }
+
+  var issueHtml = '';
+  issueHtml += mkBlock('Points critiques','ti-alert-triangle','var(--crbg)','var(--cr)','cr',crits,'Critique');
+  issueHtml += mkBlock('A faire','ti-tool','var(--afbg)','var(--af)','af',afaire,'A faire');
+  issueHtml += mkBlock('Points moyens','ti-alert-circle','var(--mobg)','var(--mo)','mo',moyen,'Moyen');
+  if(!crits.length && !afaire.length && !moyen.length){
+    issueHtml = '<div class="iblk"><div style="text-align:center;padding:22px;color:var(--ok)">'
+      + '<i class="ti ti-circle-check" style="font-size:34px;display:block;margin-bottom:8px"></i>'
+      + '<strong style="font-size:14px">Aucun point d\'attention</strong>'
+      + '<div style="font-size:12px;color:var(--txt3);margin-top:4px">Tous les controles sont corrects</div>'
+      + '</div></div>';
+  }
+  document.getElementById('sum_issues').innerHTML = issueHtml;
+  // [CORRECTION 5] scriptbox supprime du HTML, plus besoin de le remplir ici
+}
+
+
+// ── [CORRECTIONS 5 + 6 + 7] EXPORT ──────────────────────────────────────────
+function doExport(){
+  var btn = document.getElementById('btn_export');
+  var st  = document.getElementById('exp_status');
+
+  // [CORRECTION 7] Desactiver le bouton, afficher le loader pendant l'envoi
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2 spin-icon"></i> Envoi du rapport\u2026';
+  st.className  = 'expst';
+  st.innerHTML  = '';
+
+  // Construction des infos vehicule
+  var vehicule = (
+    (document.getElementById('inp_marque').value || '') + ' ' +
+    (document.getElementById('inp_modele').value || '')
+  ).trim();
+
+  var p = {
+    'Prenom':      document.getElementById('inp_prenom').value  || '',
+    'Date':        document.getElementById('inp_date').value    || '',
+    'Marque':      document.getElementById('inp_marque').value  || '',
+    'Modele':      document.getElementById('inp_modele').value  || '',
+    'Plaque':      getPlaque(),
+    'Km':          document.getElementById('inp_km').value      || '',
+    'Commentaire': document.getElementById('inp_comment').value || ''
+  };
+
+  // [CORRECTION 6] Construction des items avec photos en base64 pour upload Drive
+  // Le Apps Script recevra ces donnees et uplaodera les photos vers Google Drive
+  var itemsData = [];
+  CATS.forEach(function(cat){
+    cat.items.forEach(function(it){
+      itemsData.push({
+        vehicule:    vehicule,
+        categorie:   cat.label,
+        item:        it,
+        note:        STATE[it].rating    || 'Non evalue',
+        commentaire: STATE[it].note      || '',
+        photos:      STATE[it].photos    // Array de base64 deja compresses (correction 3)
+      });
+    });
+  });
+  p['items'] = itemsData;
+
+  // URLSearchParams = seule methode fiable avec Google Apps Script
+  // FormData + no-cors rend les donnees illisibles cote script
+  var params = new URLSearchParams();
+  params.append('data', JSON.stringify(p));
+
+  fetch(SCRIPT_URL, {method:'POST', body: params})
+    .then(function(){
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
+      showConfirmation();
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
+      toast('Erreur lors de l\'envoi du rapport.');
+    });
+}
+
+
+// ── CONFIRMATION ──────────────────────────────────────────────────────────────
+function showConfirmation(){
+  document.getElementById('scr1').className = 'scr';
+  document.getElementById('scr2').className = 'scr';
+  document.getElementById('scr3').className = 'scr';
+  document.getElementById('scr4').className = 'scr';
+  document.getElementById('nav1').className = 'navbar';
+  document.getElementById('nav2').className = 'navbar';
+  document.getElementById('nav3').className = 'navbar';
+  document.getElementById('scr_confirm').className = 'scr on';
+  window.scrollTo(0,0);
+  setTimeout(function(){
+    var bar = document.getElementById('confirm_bar');
+    if(bar) bar.style.width = '100%';
+  }, 50);
+  setTimeout(function(){
+    doReset(true);
+  }, 4000);
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function doReset(skipConfirm){
+  if(!skipConfirm && !confirm('Demarrer un nouvel audit ? Toutes les donnees seront effacees.')) return;
+  initState();
+  buildControls();
+  document.getElementById('inp_prenom').value  = '';
+  document.getElementById('inp_modele').value  = '';
+  document.getElementById('inp_km').value      = '';
+  document.getElementById('inp_comment').value = '';
+  document.getElementById('inp_marque').value  = '';
+  document.getElementById('inp_plaque').value  = '';
+  document.getElementById('plq_display').textContent = '-- -- --';
+  document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('exp_status').textContent = '';
+  // [CORRECTION 7] Reinitialiser l'etat du bouton export
+  var btn = document.getElementById('btn_export');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-table-export"></i>Envoyer le rapport';
+  // [CORRECTION 1] Effacer les surlignages d'erreur eventuels
+  resetFieldErrors();
+  showScr(1);
+  toast('Nouvel audit demarre');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg){
+  var el = document.getElementById('toast_el');
+  el.textContent = msg;
+  el.className = 'toast on';
+  setTimeout(function(){ el.className = 'toast'; }, 2800);
+}
+
+// ── UTILITAIRE : effacer les erreurs de validation ────────────────────────────
+var REQUIRED_FIELDS = ['inp_prenom','inp_date','inp_marque','inp_modele','inp_plaque','inp_km'];
+function resetFieldErrors(){
+  REQUIRED_FIELDS.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.style.borderColor = ''; el.style.background = ''; }
+  });
+}
+
+// ── VALIDATION ECRAN 1 → 2 ────────────────────────────────────────────────────
+function validateScr1(){
+  resetFieldErrors();
+
+  var missing  = [];
+  var firstEl  = null;
+
+  function check(id, label, overrideVal){
+    var el  = document.getElementById(id);
+    var val = (overrideVal !== undefined) ? String(overrideVal) : (el ? el.value.trim() : '');
+    if(!val){
+      if(el){ el.style.borderColor='var(--crb)'; el.style.background='var(--crbg)'; }
+      missing.push(label);
+      if(!firstEl && el) firstEl = el;
+    } else {
+      if(el){ el.style.borderColor=''; el.style.background=''; }
+    }
+  }
+
+  check('inp_prenom', 'Prenom');
+  check('inp_date',   'Date');
+  check('inp_marque', 'Marque');
+  check('inp_modele', 'Modele');
+  check('inp_plaque', 'Plaque', getPlaque());
+  check('inp_km',     'Kilometrage');
+
+  // Effacement auto des erreurs a la saisie (compatible tous navigateurs)
+  REQUIRED_FIELDS.forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(el._clr){ el.removeEventListener('input', el._clr); el.removeEventListener('change', el._clr); }
+    el._clr = function(){ el.style.borderColor=''; el.style.background=''; };
+    el.addEventListener('input',  el._clr);
+    el.addEventListener('change', el._clr);
+  });
+
+  if(missing.length > 0){
+    toast(missing.length === 1 ? 'Manquant : ' + missing[0] : 'Manquants : ' + missing.join(', '));
+    if(firstEl) firstEl.scrollIntoView({behavior:'smooth', block:'center'});
+    return false;
+  }
+  return true;
+}
+
+// ── [CORRECTION 1] VALIDATION ECRAN 2 → 3 ────────────────────────────────────
+// Verifie que tous les items de controle ont un rating.
+function validateScr2(){
+  var unrated = Object.keys(STATE).filter(function(k){ return !STATE[k].rating; });
+  if(unrated.length > 0){
+    toast('Tous les contr\u00f4les doivent \u00eatre \u00e9valu\u00e9s (' + unrated.length + ' restant(s)).');
+    return false;
+  }
+  return true;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('inp_date').value = new Date().toISOString().split('T')[0];
+buildControls();
+
+// Evenements de navigation avec validations
+// [CORRECTION 1] Ecran 1 → 2 : validation des champs obligatoires
+document.getElementById('btn_goto2').addEventListener('click', function(){
+  if(validateScr1()) showScr(2);
+});
+document.getElementById('btn_back1').addEventListener('click',  function(){ showScr(1); });
+document.getElementById('btn_back1b').addEventListener('click', function(){ showScr(1); });
+
+// [CORRECTION 1] Ecran 2 → 3 : validation que tous les items sont evalues
+document.getElementById('btn_goto3').addEventListener('click', function(){
+  if(validateScr2()) showScr(3);
+});
+document.getElementById('btn_back2').addEventListener('click',  function(){ showScr(2); });
+document.getElementById('btn_back2b').addEventListener('click', function(){ showScr(2); });
+
+// Ecran 3 → 4 : pas de validation requise
+document.getElementById('btn_goto4').addEventListener('click', function(){ showScr(4); });
+document.getElementById('btn_back3').addEventListener('click',  function(){ showScr(3); });
+
+// [CORRECTIONS 5/6/7] Bouton d'export unifie
+document.getElementById('btn_export').addEventListener('click', doExport);
+document.getElementById('btn_reset').addEventListener('click',  doReset);
+
+/*
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  [CORRECTION 6] NOUVEAU SCRIPT GOOGLE APPS SCRIPT                      ║
+  ║  Remplace l'ancien. Gere l'upload des photos vers Google Drive          ║
+  ║  et ecrit les URLs dans Google Sheets.                                  ║
+  ║                                                                          ║
+  ║  INSTALLATION :                                                          ║
+  ║  1. Ouvrir votre Google Sheet                                            ║
+  ║  2. Extensions > Apps Script                                             ║
+  ║  3. Coller le code ci-dessous (remplacer tout le contenu existant)       ║
+  ║  4. Deployer > Nouvelle App Web                                          ║
+  ║     - Executer en tant que : Moi                                         ║
+  ║     - Qui peut acceder : Tout le monde                                   ║
+  ║  5. Copier l'URL de deploiement dans la variable SCRIPT_URL ci-dessus   ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+
+  function doPost(e) {
+    var data   = JSON.parse(e.postData.contents);
+    var ss     = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet  = ss.getSheetByName('Audits') || ss.insertSheet('Audits');
+
+    // Creer (ou recuperer) le dossier de photos sur Drive
+    var folder;
+    try {
+      var it = DriveApp.getFoldersByName('Audits_Photos');
+      folder = it.hasNext() ? it.next() : DriveApp.createFolder('Audits_Photos');
+    } catch(err) {
+      folder = DriveApp.getRootFolder();
+    }
+
+    // En-tetes si la feuille est vide
+    if(sheet.getLastRow() === 0){
+      sheet.appendRow([
+        'Prenom','Date','Marque','Modele','Plaque','Km',
+        'Vehicule','Categorie','Item','Note','Observation','Photos','Commentaire_General'
+      ]);
+    }
+
+    var prenom  = data.Prenom      || '';
+    var date    = data.Date        || '';
+    var marque  = data.Marque      || '';
+    var modele  = data.Modele      || '';
+    var plaque  = data.Plaque      || '';
+    var km      = data.Km          || '';
+    var comment = data.Commentaire || '';
+
+    // Parcourir chaque item de controle
+    (data.items || []).forEach(function(item) {
+      var photoUrls = [];
+
+      // Uploader chaque photo base64 vers Drive
+      (item.photos || []).forEach(function(b64, i) {
+        try {
+          var raw  = b64.indexOf(',') > -1 ? b64.split(',')[1] : b64;
+          var blob = Utilities.newBlob(
+            Utilities.base64Decode(raw),
+            'image/jpeg',
+            plaque + '_' + item.item.replace(/[^a-zA-Z0-9]/g,'_') + '_' + (i+1) + '.jpg'
+          );
+          var file = folder.createFile(blob);
+          // Rendre le fichier accessible via lien
+          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          photoUrls.push(file.getDownloadUrl());
+        } catch(err) {
+          photoUrls.push('Erreur_upload: ' + err.message);
+        }
+      });
+
+      // Ecrire la ligne dans le Sheet
+      sheet.appendRow([
+        prenom, date, marque, modele, plaque, km,
+        item.vehicule, item.categorie, item.item,
+        item.note, item.commentaire,
+        photoUrls.join(' | '),
+        comment
+      ]);
+    });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({status: 'ok'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+*/
+</script>
+</body>
+</html>
